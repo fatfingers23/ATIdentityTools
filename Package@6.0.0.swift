@@ -17,12 +17,17 @@ let package = Package(
         .library(
             name: "ATIdentityTools",
             targets: ["ATIdentityTools"]),
+        .library(
+            name: "DIDCore",
+            targets: ["DIDCore"])
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "ATIdentityTools"),
+        .target(
+            name: "DIDCore"),
         .testTarget(
             name: "ATIdentityToolsTests",
             dependencies: ["ATIdentityTools"]

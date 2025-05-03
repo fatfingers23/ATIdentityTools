@@ -80,3 +80,92 @@ public enum DIDError: Error, LocalizedError, CustomStringConvertible {
         }
     }
 }
+
+/// Errors that can occur while validating or constructing a DID.
+public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
+
+    /// The length of the decentralized identifier (DID) is too long.
+    ///
+    /// There's a maximum limit of 2,048 characters.
+    case tooLong
+
+    /// Encoding the `String` object failed.
+    case encodingFailed
+
+    /// The string of the decentralized identifier (DID) is too large of a byte size.
+    ///
+    /// The maximum size is 2,048 bytes.
+    case exceedsMaximumSize
+
+    /// The `did` prefix is missing.
+    case missingPrefix
+
+    /// There is a missing `:` after the `did` prefix.
+    case missingColonAfterPrefix
+
+    /// There is no method name.
+    case emptyMethodName
+
+    /// This method name has not been blessed in the AT Protocol.
+    ///
+    /// - Parameter unblessedMethodName: The unblessed method name.
+    case notABlessedMethodName(unblessedMethodName: String)
+
+    /// The identifier portion of the decentralized identifier (DID) is empty.
+    case emptyIdentifier
+
+    /// An invalid character in the method portion has been found.
+    ///
+    /// - Parameters:
+    ///   - position: The position of the invalid character, relative to the identifier.
+    ///   - character: The invalid character itself.
+    case invalidMethodCharacter(position: Int, character: Character)
+
+    /// An invalid character has been found in the identifier.
+    ///
+    /// - Parameters:
+    ///   - position: The position of the invalid character, relative to the identifier.
+    ///   - character: The invalid character itself.
+    case disallowedCharacter(position: Int, character: Character)
+
+    /// The percentage encoding in the identifier is invalid.
+    ///
+    /// - Parameter position: The position of the percentage sign, relative to the identifier.
+    case invalidPercentEncoding(position: Int)
+
+    /// A trailing colon has been found in the decentralized identifier (DID).
+    case trailingColonNotAllowed
+
+    public var errorDescription: String? {
+        switch self {
+            case .tooLong:
+                return "DID is too long. There's a maximum limit of 2,048 characters."
+            case .encodingFailed:
+                return "DID failed to be encoded into a Data object."
+            case .exceedsMaximumSize:
+                return "DID is too large of a byte size. The maximum size is 2,048 bytes."
+            case .missingPrefix:
+                return "DID requires \'did\' prefix."
+            case .missingColonAfterPrefix:
+                return "Missing colon after the \'did\' prefix."
+            case .emptyMethodName:
+                return "DID method name must not be empty."
+            case .notABlessedMethodName(let unblessedMethodName):
+                return "Method name \'\(unblessedMethodName)\' is not blessed."
+            case .emptyIdentifier:
+                return "DID identifier must not be empty."
+            case .invalidMethodCharacter(let position, let character):
+                return "Invalid character '\(character)' at position \(position) in DID method name."
+            case .disallowedCharacter(let position, let character):
+                return "Disallowed character '\(character)' in DID at identifier position \(position)."
+            case .invalidPercentEncoding(let position):
+                return "Incomplete percent-encoded sequence starting at position \(position)."
+            case .trailingColonNotAllowed:
+                return "Trailing colons are not allowed in a DID."
+        }
+    }
+
+    public var description: String {
+        return errorDescription ?? String(describing: self)
+    }
+}

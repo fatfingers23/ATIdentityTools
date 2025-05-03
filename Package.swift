@@ -30,7 +30,7 @@ let package = Package(
             name: "DIDCore"),
         .testTarget(
             name: "ATIdentityToolsTests",
-            dependencies: ["ATIdentityTools"]
+            dependencies: ["ATIdentityTools", "DIDCore"]
         ),
     ]
 )

@@ -136,6 +136,11 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
     /// A trailing colon has been found in the decentralized identifier (DID).
     case trailingColonNotAllowed
 
+    /// The URL of the `did:web` decentralized identifier (DID) is invalid.
+    ///
+    /// - Parameter url: The invalid URL.
+    case invalidURL(url: String)
+
     public var errorDescription: String? {
         switch self {
             case .tooLong:
@@ -162,6 +167,8 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
                 return "Incomplete percent-encoded sequence starting at position \(position)."
             case .trailingColonNotAllowed:
                 return "Trailing colons are not allowed in a DID."
+            case .invalidURL(let url):
+                return "Invalid URL: \(url)"
         }
     }
 

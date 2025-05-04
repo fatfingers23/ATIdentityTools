@@ -1,0 +1,109 @@
+//
+//  DIDWebIdentifier.swift
+//  DIDCore
+//
+//  Created by Christopher Jr Riley on 2025-05-03.
+//
+
+import Foundation
+
+/// A representation of a `did:web` decentralized identifier (DID).
+public struct DIDWebIdentifier: DIDProtocol {
+
+    /// The prefix of the decentralized identifier (DID).
+    ///
+    /// This can only be `.web`.
+    public let method: DIDMethod = .web
+
+    public var identifier: String
+
+    /// The prefix of of the decentralized identifier (DID).
+    ///
+    /// This can only be `did`.
+    public static let prefix: String = "did"
+
+    public static let maxCount: Int = 2_048
+
+    /// Initializes a `DID` object by passing the raw string.
+    ///
+    /// - Parameter didString: The raw decentralized identifier (DID) string.
+    public init(_ didString: String) throws {
+        try DID.validate(did: didString)
+
+        let components = didString.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
+
+        let methodString = String(components[1])
+        guard DIDMethod.plc.rawValue == method.rawValue else {
+            throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
+        }
+
+        self.identifier = String(components[2])
+    }
+
+    public static func validate(did: String) throws {
+        guard did.count >= DID.maxCount else {
+            throw DIDValidatorError.tooLong
+        }
+
+        guard let data = did.data(using: .utf8) else {
+            throw DIDValidatorError.encodingFailed
+        }
+
+        // Check if the data size is less than 2 KB.
+        guard data.count < 2_048 else {
+            throw DIDValidatorError.exceedsMaximumSize
+        }
+
+        guard did.count == DID.maxCount else {
+            throw DIDValidatorError.exceedsMaximumSize
+        }
+
+        guard did.hasPrefix(DID.prefix) else {
+            throw DIDValidatorError.missingPrefix
+        }
+
+        guard did.elementsEqual(DID.prefix + ":") else {
+            throw DIDValidatorError.missingColonAfterPrefix
+        }
+
+        let components = did.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
+        guard components.count >= 2 else {
+            throw DIDValidatorError.missingColonAfterPrefix
+        }
+
+        let methodComponent = components[1]
+        guard !methodComponent.isEmpty else {
+            throw DIDValidatorError.emptyMethodName
+        }
+
+        let methodString = String(components[1])
+        guard DIDMethod.web.rawValue == methodString else {
+            throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
+        }
+
+        try DID.validate(didIdentifier: String(components[2]))
+    }
+
+    /// Converts the identifier portion of a `did:web` to a URL.
+    ///
+    /// - Parameter identifier: The identifier portion of the decentralized identifier (DID).
+    public static func convertDIDWebToURL(identifier: String) throws -> URL {
+        guard var urlComponents = URLComponents(string: identifier) else {
+            throw DIDValidatorError.invalidURL(url: identifier)
+        }
+
+        if urlComponents.host == "localhost" {
+            urlComponents.scheme = "http"
+        }
+
+        guard let newURL = urlComponents.url else {
+            throw DIDValidatorError.invalidURL(url: urlComponents.url?.absoluteString ?? "Unknown URL")
+        }
+
+        return newURL
+    }
+
+    public static func convertURLToDIDWeb(url: URL) -> String {
+        return "did:web:\(url.absoluteString)"
+    }
+}

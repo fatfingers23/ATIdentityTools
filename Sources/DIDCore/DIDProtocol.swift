@@ -116,4 +116,18 @@ extension DIDProtocol {
             throw DIDValidatorError.trailingColonNotAllowed
         }
     }
+
+    /// Determines whether the decentralized identifier (DID) is an AT Protocol-compatible string.
+    ///
+    /// - Parameter did: The decentralized identifier (DID) as a string.
+    /// - Returns: `true` if it's an AT Protocol-compatible string, or `false` if it's invalid (or an
+    /// incompatible DID).
+    public static func isATProtoDID(_ did: String) -> Bool {
+        do {
+            try Self.validate(didIdentifier: did)
+            return true
+        } catch {
+            return false
+        }
+    }
 }

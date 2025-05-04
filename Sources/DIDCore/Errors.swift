@@ -141,6 +141,9 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
     /// - Parameter url: The invalid URL.
     case invalidURL(url: String)
 
+    /// The URL of the `did:web` contains a port number, even though the URL is not "localhost."
+    case urlHasPortNumberWithoutLocalhost
+
     public var errorDescription: String? {
         switch self {
             case .tooLong:
@@ -169,6 +172,8 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
                 return "Trailing colons are not allowed in a DID."
             case .invalidURL(let url):
                 return "Invalid URL: \(url)"
+            case .urlHasPortNumberWithoutLocalhost:
+                return "URLs with a port number must include \"localhost\" as the hostname."
         }
     }
 

@@ -81,7 +81,7 @@ public struct DIDWebIdentifier: DIDProtocol {
             throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
         }
 
-        try DID.validate(didIdentifier: String(components[2]))
+        _ = try Self.convertDIDWebToURL(identifier: String(components[2]))
     }
 
     /// Converts the identifier portion of a `did:web` to a URL.
@@ -94,6 +94,10 @@ public struct DIDWebIdentifier: DIDProtocol {
 
         if urlComponents.host == "localhost" {
             urlComponents.scheme = "http"
+        } else {
+            guard urlComponents.port == nil else {
+                throw DIDValidatorError.urlHasPortNumberWithoutLocalhost
+            }
         }
 
         guard let newURL = urlComponents.url else {
@@ -109,5 +113,30 @@ public struct DIDWebIdentifier: DIDProtocol {
     /// - Returns: A `String` representation of a `did:web` DID.
     public static func convertURLToDIDWeb(url: URL) -> String {
         return "did:web:\(url.absoluteString)"
+    }
+
+    /// Determines if the string is a `did:web` decentralized identifier (DID).
+    ///
+    /// - Parameter did: The decentralized identifier (DID) to convert.
+    /// - Returns: `true` if it is a `did:web` DID, or `false` if it's not (or an incompatible DID).
+    public static func isDIDWeb(_ did: String) -> Bool {
+        do {
+            try Self.validate(did: did)
+        } catch {
+            return false
+        }
+
+        let components = did.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
+        guard let urlComponents = URLComponents(string: String(components[1])) else {
+            return false
+        }
+
+        do {
+            _ = try Self.convertDIDWebToURL(identifier: String(components[2]))
+
+            return true
+        } catch {
+            return false
+        }
     }
 }

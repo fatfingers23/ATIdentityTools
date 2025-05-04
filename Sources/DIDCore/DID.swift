@@ -49,15 +49,3 @@ public struct DID: DIDProtocol {
         self.identifier = String(components[2])
     }
 }
-
-/// The method name component of the decentralized identifier (DID).
-///
-/// Currently, the AT Protocol considers `plc` and `web` as "blessed."
-public enum DIDMethod: String, CaseIterable {
-
-    /// The `did:plc` method.
-    case plc = "plc"
-
-    /// The `did:web` method.
-    case web = "web"
-    }

@@ -156,7 +156,7 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
             case .emptyMethodName:
                 return "DID method name must not be empty."
             case .notABlessedMethodName(let unblessedMethodName):
-                return "Method name \'\(unblessedMethodName)\' is not blessed."
+                return "Method name \'\(unblessedMethodName)\' is not blessed. Currently blessed methods include: \(DIDMethod.allCases.map(\.rawValue).joined(separator: ", "))."
             case .emptyIdentifier:
                 return "DID identifier must not be empty."
             case .invalidMethodCharacter(let position, let character):

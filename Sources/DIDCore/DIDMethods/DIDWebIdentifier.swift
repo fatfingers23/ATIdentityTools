@@ -103,6 +103,10 @@ public struct DIDWebIdentifier: DIDProtocol {
         return newURL
     }
 
+    /// Converts a URL to a `did:web` decentralized identifier (DID) as a `String` object.
+    ///
+    /// - Parameter url: The URL to convert.
+    /// - Returns: A `String` representation of a `did:web` DID.
     public static func convertURLToDIDWeb(url: URL) -> String {
         return "did:web:\(url.absoluteString)"
     }

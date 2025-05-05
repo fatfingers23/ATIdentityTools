@@ -42,8 +42,16 @@ extension DIDProtocol {
     ///
     /// - Parameter did: The decentralized identifier (DID) to validate.
     public static func validate(did: String) throws {
-        guard did.count >= DID.maxCount else {
-            throw DIDValidatorError.tooLong
+        guard did.count > 0 else {
+            throw DIDValidatorError.emptyDID
+        }
+
+        guard did.count == DID.maxCount else {
+            if did.count < DID.maxCount {
+                throw DIDValidatorError.tooShort
+            } else {
+                throw DIDValidatorError.tooLong
+            }
         }
 
         guard let data = did.data(using: .utf8) else {

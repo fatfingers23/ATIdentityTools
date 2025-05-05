@@ -84,6 +84,9 @@ public enum DIDError: Error, LocalizedError, CustomStringConvertible {
 /// Errors that can occur while validating or constructing a DID.
 public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
 
+    /// The decentralized identifier (DID) is empty.
+    case emptyDID
+
     /// The string is an invalid DID.
     case invalidDID
 
@@ -92,9 +95,15 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
     /// - Parameter did: The raw DID value.
     case invalidDIDRelativeURI(did: String)
 
+    /// The length of the decentralized identifier (DID) is too short.
+    ///
+    /// For `did:plc` DIDs, the character count must be 32 characters.
+    case tooShort
+
     /// The length of the decentralized identifier (DID) is too long.
     ///
-    /// There's a maximum limit of 2,048 characters.
+    /// There's a maximum limit of 2,048 characters. For `did:plc`, the character count must be
+    /// 32 characters.
     case tooLong
 
     /// Encoding the `String` object failed.
@@ -154,10 +163,14 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
 
     public var errorDescription: String? {
         switch self {
+            case .emptyDID:
+                return "DID is empty."
             case .invalidDID:
                 return "DID is invalid."
             case .invalidDIDRelativeURI(let did):
                 return "DID '\(did)' relative URI is invalid."
+            case .tooShort:
+                return "DID is too short. did:plc DIDs must have the exact size of 32 characters."
             case .tooLong:
                 return "DID is too long. There's a maximum limit of 2,048 characters."
             case .encodingFailed:

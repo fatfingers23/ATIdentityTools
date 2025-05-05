@@ -41,6 +41,10 @@ public struct DIDWebIdentifier: DIDProtocol {
     }
 
     public static func validate(did: String) throws {
+        guard did.count > 0 else {
+            throw DIDValidatorError.emptyDID
+        }
+
         guard did.count >= DID.maxCount else {
             throw DIDValidatorError.tooLong
         }

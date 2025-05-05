@@ -13,7 +13,7 @@ public struct DIDWebIdentifier: DIDProtocol {
     /// The prefix of the decentralized identifier (DID).
     ///
     /// This can only be `.web`.
-    public let method: DIDMethod = .web
+    public private(set) var method: DIDMethod = .web
 
     public var identifier: String
 
@@ -127,7 +127,7 @@ public struct DIDWebIdentifier: DIDProtocol {
         }
 
         let components = did.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
-        guard let urlComponents = URLComponents(string: String(components[1])) else {
+        guard URLComponents(string: String(components[1])) != nil else {
             return false
         }
 

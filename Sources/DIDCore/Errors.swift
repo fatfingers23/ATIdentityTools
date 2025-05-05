@@ -84,6 +84,14 @@ public enum DIDError: Error, LocalizedError, CustomStringConvertible {
 /// Errors that can occur while validating or constructing a DID.
 public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
 
+    /// The string is an invalid DID.
+    case invalidDID
+
+    /// The decentralized identifier (DID) relative to the URI is invalid.
+    ///
+    /// - Parameter did: The raw DID value.
+    case invalidDIDRelativeURI(did: String)
+
     /// The length of the decentralized identifier (DID) is too long.
     ///
     /// There's a maximum limit of 2,048 characters.
@@ -146,6 +154,10 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
 
     public var errorDescription: String? {
         switch self {
+            case .invalidDID:
+                return "DID is invalid."
+            case .invalidDIDRelativeURI(let did):
+                return "DID '\(did)' relative URI is invalid."
             case .tooLong:
                 return "DID is too long. There's a maximum limit of 2,048 characters."
             case .encodingFailed:
@@ -174,6 +186,46 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
                 return "Invalid URL: \(url)"
             case .urlHasPortNumberWithoutLocalhost:
                 return "URLs with a port number must include \"localhost\" as the hostname."
+        }
+    }
+
+    public var description: String {
+        return errorDescription ?? String(describing: self)
+    }
+}
+
+/// Errors that can occur while validating or constructing a DID document.
+public enum DIDDocumentValidatorError: Error, LocalizedError, CustomStringConvertible {
+
+    /// There's a duplicate service ID.
+    ///
+    /// - Parameter serviceID: The service ID that's been duplicated.
+    case duplicateServiceID(serviceID: String)
+
+    /// The handle is either missing or invalid.
+    case missingOrInvalidHandle
+
+    /// The signing key is either missing or invalid.
+    case missingOrInvalidSigningKey
+
+    /// The Personal Data Server (PDS) is missing.
+    case missingPDS
+
+    /// The URL of the Personal Data Server (PDS) is missing.
+    case invalidPDSURL
+
+    public var errorDescription: String? {
+        switch self {
+            case .duplicateServiceID(let serviceID):
+                return "Duplicate service ID: \(serviceID)"
+            case .missingOrInvalidHandle:
+                return "Missing or invalid handle."
+            case .missingOrInvalidSigningKey:
+                return "Missing or invalid signing key."
+            case .missingPDS:
+                return "The PDS is missing."
+            case .invalidPDSURL:
+                return "The URL for PDS is invalid."
         }
     }
 

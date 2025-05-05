@@ -13,7 +13,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
     /// The prefix of the decentralized identifier (DID).
     ///
     /// This can only be `.plc`.
-    public let method: DIDMethod = .plc
+    public private(set) var method: DIDMethod = .plc
 
     public var identifier: String
 

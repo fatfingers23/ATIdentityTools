@@ -10,7 +10,7 @@ import Foundation
 /// The method name component of the decentralized identifier (DID).
 ///
 /// Currently, the AT Protocol considers `plc` and `web` as "blessed."
-public enum DIDMethod: String, CaseIterable {
+public enum DIDMethod: String, Codable, Equatable, CaseIterable {
 
     /// The `did:plc` method.
     case plc = "plc"
@@ -19,7 +19,7 @@ public enum DIDMethod: String, CaseIterable {
     case web = "web"
 
     /// A collection of supported `did` "blessed" types.
-    public static let didMethods: [DIDProtocol.Type] = [
+    public static let didMethods: [any DIDProtocol.Type] = [
         DIDPLCIdentifier.self,
         DIDWebIdentifier.self
     ]

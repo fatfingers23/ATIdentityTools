@@ -477,6 +477,10 @@ public struct DIDDocument: Codable, Equatable {
     ///
     /// - Throws: `DIDDocumentValidatorError` if any AT Protocol-related requirements are not met.
     public func validateATProtocolCompliance() throws {
+        guard let documentController = controller else {
+            throw DIDDocumentValidatorError.missingOrInvalidSigningKey
+        }
+
         // Handle (alsoKnownAs must contain at://[handle]).
         guard let handles = alsoKnownAs,
               let _ = handles.first(where: {
@@ -508,7 +512,7 @@ public struct DIDDocument: Codable, Equatable {
                 "EcdsaSecp256k1VerificationKey2019"
             ].contains(method.type)
 
-            let controllerIsSelf = controller(method.controller, contains: id)
+            let controllerIsSelf = controller(documentController, contains: id)
             let publicKeyIsMultibase = method.multibasePublicKey?.hasPrefix("z") == true
 
             if (idMatchesCurrent && isMultikey && controllerIsSelf && publicKeyIsMultibase) ||
@@ -570,5 +574,4 @@ public struct DIDDocument: Codable, Equatable {
                 return multipleDIDs.contains(did)
         }
     }
-
 }

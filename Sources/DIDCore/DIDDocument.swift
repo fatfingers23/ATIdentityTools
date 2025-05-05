@@ -461,11 +461,11 @@ public struct DIDDocument: Codable, Equatable {
     ///
     /// - Throws: `DIDDocumentValidatorError` if any W3C rules are violated.
     public func validateW3CCompliance() throws {
-        guard let serviceList = service else { return }
+        guard let serviceArray = service else { return }
 
         var seen = Set<String>()
-        for entry in serviceList {
-            let fullID = entry.id.description.hasPrefix("#") ? "\(id.description)\(entry.id.description)" : entry.id.description
+        for serviceEntry in serviceArray {
+            let fullID = serviceEntry.id.description.hasPrefix("#") ? "\(id.description)\(serviceEntry.id.description)" : serviceEntry.id.description
             if seen.contains(fullID) {
                 throw DIDDocumentValidatorError.duplicateServiceID(serviceID: fullID)
             }

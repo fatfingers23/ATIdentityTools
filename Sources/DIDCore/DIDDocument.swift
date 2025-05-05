@@ -495,13 +495,27 @@ public struct DIDDocument: Codable, Equatable {
         // - `controller` must match the DID.
         // - `publicKeyMultibase` must start with "z" (multibase prefix).
         guard (verificationMethod?.compactMap({ entry -> DIDVerificationMethod? in
-            if case let .method(method) = entry {
-                return method.id.description.hasSuffix("#atproto") &&
-                method.type == "Multikey" &&
-                controller(method.controller, contains: id) == true &&
-                method.multibasePublicKey?.starts(with: "z") == true
-                ? method : nil
+            guard case let .method(method) = entry else {
+                return nil
             }
+
+            let idMatchesCurrent = method.id.description.hasSuffix("#atproto")
+            let idMatchesLegacy = method.id.description == "#atproto"
+
+            let isMultikey = method.type == "Multikey"
+            let isLegacyType = [
+                "EcdsaSecp256r1VerificationKey2019",
+                "EcdsaSecp256k1VerificationKey2019"
+            ].contains(method.type)
+
+            let controllerIsSelf = controller(method.controller, contains: id)
+            let publicKeyIsMultibase = method.multibasePublicKey?.hasPrefix("z") == true
+
+            if (idMatchesCurrent && isMultikey && controllerIsSelf && publicKeyIsMultibase) ||
+                (idMatchesLegacy && isLegacyType && controllerIsSelf && publicKeyIsMultibase) {
+                return method
+            }
+
             return nil
         }).first) != nil else {
             throw DIDDocumentValidatorError.missingOrInvalidSigningKey

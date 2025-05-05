@@ -479,8 +479,13 @@ public struct DIDDocument: Codable, Equatable {
     public func validateATProtocolCompliance() throws {
         // Handle (alsoKnownAs must contain at://[handle]).
         guard let handles = alsoKnownAs,
-              let primaryHandle = handles.first(where: { $0.scheme == "at" }),
-              primaryHandle.host?.isEmpty == false else {
+              let _ = handles.first(where: {
+                  $0.scheme == "at" &&
+                  $0.host?.isEmpty == false &&
+                  ($0.path.isEmpty || $0.path == "/") &&
+                  $0.query == nil &&
+                  $0.fragment == nil
+              }) else {
             throw DIDDocumentValidatorError.missingOrInvalidHandle
         }
 
@@ -489,7 +494,7 @@ public struct DIDDocument: Codable, Equatable {
         // - Use `type` "Multikey".
         // - `controller` must match the DID.
         // - `publicKeyMultibase` must start with "z" (multibase prefix).
-        guard let signingKey = verificationMethod?.compactMap({ entry -> DIDVerificationMethod? in
+        guard (verificationMethod?.compactMap({ entry -> DIDVerificationMethod? in
             if case let .method(method) = entry {
                 return method.id.description.hasSuffix("#atproto") &&
                 method.type == "Multikey" &&
@@ -498,7 +503,7 @@ public struct DIDDocument: Codable, Equatable {
                 ? method : nil
             }
             return nil
-        }).first else {
+        }).first) != nil else {
             throw DIDDocumentValidatorError.missingOrInvalidSigningKey
         }
 
@@ -506,9 +511,14 @@ public struct DIDDocument: Codable, Equatable {
         // - Have id ending in `#atproto_pds`.
         // - `type` must be "AtprotoPersonalDataServer".
         // - `serviceEndpoint` must be a valid https:// URI (or "http://localhost").
-        guard let pds = service?.first(where: {
-            $0.id.description.hasSuffix("#atproto_pds") &&
-            $0.type == .single("AtprotoPersonalDataServer")
+        guard let pds = service?.first(where: { service in
+            service.id.description.hasSuffix("#atproto_pds") &&
+            {
+                switch service.type {
+                    case .single(let type): return type == "AtprotoPersonalDataServer"
+                    case .multiple(let types): return types.contains("AtprotoPersonalDataServer")
+                }
+            }()
         }) else {
             throw DIDDocumentValidatorError.missingPDS
         }

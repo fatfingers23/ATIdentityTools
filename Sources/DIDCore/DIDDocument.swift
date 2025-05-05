@@ -477,13 +477,18 @@ public struct DIDDocument: Codable, Equatable {
     ///
     /// - Throws: `DIDDocumentValidatorError` if any AT Protocol-related requirements are not met.
     public func validateATProtocolCompliance() throws {
-        // Handle (alsoKnownAs)
+        // Handle (alsoKnownAs must contain at://[handle]).
         guard let handles = alsoKnownAs,
               let primaryHandle = handles.first(where: { $0.scheme == "at" }),
               primaryHandle.host?.isEmpty == false else {
             throw DIDDocumentValidatorError.missingOrInvalidHandle
         }
 
+        // Signing key must:
+        // - Have `id` ending in `#atproto`.
+        // - Use `type` "Multikey".
+        // - `controller` must match the DID.
+        // - `publicKeyMultibase` must start with "z" (multibase prefix).
         guard let signingKey = verificationMethod?.compactMap({ entry -> DIDVerificationMethod? in
             if case let .method(method) = entry {
                 return method.id.description.hasSuffix("#atproto") &&
@@ -497,6 +502,10 @@ public struct DIDDocument: Codable, Equatable {
             throw DIDDocumentValidatorError.missingOrInvalidSigningKey
         }
 
+        // PDS entry must:
+        // - Have id ending in `#atproto_pds`.
+        // - `type` must be "AtprotoPersonalDataServer".
+        // - `serviceEndpoint` must be a valid https:// URI (or "http://localhost").
         guard let pds = service?.first(where: {
             $0.id.description.hasSuffix("#atproto_pds") &&
             $0.type == .single("AtprotoPersonalDataServer")
@@ -504,11 +513,13 @@ public struct DIDDocument: Codable, Equatable {
             throw DIDDocumentValidatorError.missingPDS
         }
 
-        if case let .uri(url) = pds.serviceEndpoint {
-            guard url.scheme == "https" || (url.host == "localhost" && url.scheme == "http") else {
-                throw DIDDocumentValidatorError.invalidPDSURL
-            }
-        } else {
+        guard case let .uri(serviceURL) = pds.serviceEndpoint else {
+            throw DIDDocumentValidatorError.invalidPDSURL
+        }
+
+        let isLocalhost = serviceURL.host == "localhost" && serviceURL.scheme == "http"
+        let isSecureRemote = serviceURL.scheme == "https"
+        guard isLocalhost || isSecureRemote else {
             throw DIDDocumentValidatorError.invalidPDSURL
         }
     }

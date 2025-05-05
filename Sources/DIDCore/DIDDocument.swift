@@ -498,7 +498,7 @@ public struct DIDDocument: Codable, Equatable {
             if case let .method(method) = entry {
                 return method.id.description.hasSuffix("#atproto") &&
                 method.type == "Multikey" &&
-                method.controller == .single(id) &&
+                controller(method.controller, contains: id) == true &&
                 method.multibasePublicKey?.starts(with: "z") == true
                 ? method : nil
             }
@@ -529,8 +529,32 @@ public struct DIDDocument: Codable, Equatable {
 
         let isLocalhost = serviceURL.host == "localhost" && serviceURL.scheme == "http"
         let isSecureRemote = serviceURL.scheme == "https"
-        guard isLocalhost || isSecureRemote else {
+
+        let isCleanURL = serviceURL.user == nil &&
+        serviceURL.password == nil &&
+        (serviceURL.path.isEmpty || serviceURL.path == "/") &&
+        serviceURL.query == nil &&
+        serviceURL.fragment == nil
+
+        guard (isLocalhost || isSecureRemote) && isCleanURL else {
             throw DIDDocumentValidatorError.invalidPDSURL
         }
     }
+
+    /// Determines whether the decentralized identifier (DID) is found inside the `controller` portion of
+    /// the DID Document.
+    ///
+    /// - Parameters:
+    ///   - controller: The `controller` to check.
+    ///   - did: The decentralized identifier (DID) to match.
+    /// - Returns: `true` if the DID is found in the controller, or `false` if it doesn't.
+    private func controller(_ controller: DIDController, contains did: DID) -> Bool {
+        switch controller {
+            case .single(let singleDID):
+                return singleDID == did
+            case .multiple(let multipleDIDs):
+                return multipleDIDs.contains(did)
+        }
+    }
+
 }

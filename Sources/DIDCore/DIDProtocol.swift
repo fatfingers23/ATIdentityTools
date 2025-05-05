@@ -46,12 +46,8 @@ extension DIDProtocol {
             throw DIDValidatorError.emptyDID
         }
 
-        guard did.count == DID.maxCount else {
-            if did.count < DID.maxCount {
-                throw DIDValidatorError.tooShort
-            } else {
-                throw DIDValidatorError.tooLong
-            }
+        guard did.count >= DID.maxCount else {
+            throw DIDValidatorError.tooLong
         }
 
         guard let data = did.data(using: .utf8) else {

@@ -28,7 +28,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
     ///
     /// - Parameter didString: The raw decentralized identifier (DID) string.
     public init(_ didString: String) throws {
-        try DID.validate(did: didString)
+        try DIDPLCIdentifier.validate(did: didString)
 
         let components = didString.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
 
@@ -45,8 +45,13 @@ public struct DIDPLCIdentifier: DIDProtocol {
             throw DIDValidatorError.emptyDID
         }
 
-        guard did.count >= DID.maxCount else {
-            throw DIDValidatorError.tooLong
+        guard did.count == DIDPLCIdentifier.maxCount else {
+            print("did.count: \(did.count)")
+            if did.count < DIDPLCIdentifier.maxCount {
+                throw DIDValidatorError.tooShort
+            } else {
+                throw DIDValidatorError.tooLong
+            }
         }
 
         guard let data = did.data(using: .utf8) else {
@@ -58,15 +63,15 @@ public struct DIDPLCIdentifier: DIDProtocol {
             throw DIDValidatorError.exceedsMaximumSize
         }
 
-        guard did.count == DID.maxCount else {
+        guard did.count == DIDPLCIdentifier.maxCount else {
             throw DIDValidatorError.exceedsMaximumSize
         }
 
-        guard did.hasPrefix(DID.prefix) else {
+        guard did.hasPrefix(DIDPLCIdentifier.prefix) else {
             throw DIDValidatorError.missingPrefix
         }
 
-        guard did.elementsEqual(DID.prefix + ":") else {
+        guard did.hasPrefix("\(DIDPLCIdentifier.prefix):") else {
             throw DIDValidatorError.missingColonAfterPrefix
         }
 
@@ -85,7 +90,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
             throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
         }
 
-        try DID.validate(didIdentifier: String(components[2]))
+        try DIDPLCIdentifier.validate(didIdentifier: String(components[2]))
     }
 
     private static func validate(didIdentifier: String) throws {

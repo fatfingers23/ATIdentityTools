@@ -50,7 +50,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
             if did.count < DIDPLCIdentifier.maxCount {
                 throw DIDValidatorError.tooShort
             } else {
-                throw DIDValidatorError.tooLong
+                throw DIDValidatorError.tooLongForDIDPLC
             }
         }
 

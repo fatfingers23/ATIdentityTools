@@ -82,7 +82,7 @@ public enum DIDError: Error, LocalizedError, CustomStringConvertible {
 }
 
 /// Errors that can occur while validating or constructing a DID.
-public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
+public enum DIDValidatorError: Error, Equatable, LocalizedError, CustomStringConvertible {
 
     /// The decentralized identifier (DID) is empty.
     case emptyDID
@@ -105,6 +105,9 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
     /// There's a maximum limit of 2,048 characters. For `did:plc`, the character count must be
     /// 32 characters.
     case tooLong
+
+    /// The length of the `did:plc` is too long.
+    case tooLongForDIDPLC
 
     /// Encoding the `String` object failed.
     case encodingFailed
@@ -173,6 +176,8 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
                 return "DID is too short. did:plc DIDs must have the exact size of 32 characters."
             case .tooLong:
                 return "DID is too long. There's a maximum limit of 2,048 characters."
+            case .tooLongForDIDPLC:
+                return "did:plc is too long. There's a maximum limit of 32 characters."
             case .encodingFailed:
                 return "DID failed to be encoded into a Data object."
             case .exceedsMaximumSize:
@@ -208,7 +213,7 @@ public enum DIDValidatorError: Error, LocalizedError, CustomStringConvertible {
 }
 
 /// Errors that can occur while validating or constructing a DID document.
-public enum DIDDocumentValidatorError: Error, LocalizedError, CustomStringConvertible {
+public enum DIDDocumentValidatorError: Error, Equatable, LocalizedError, CustomStringConvertible {
 
     /// There's a duplicate service ID.
     ///

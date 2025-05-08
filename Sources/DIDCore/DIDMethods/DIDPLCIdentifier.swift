@@ -13,7 +13,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
     /// The prefix of the decentralized identifier (DID).
     ///
     /// This can only be `.plc`.
-    public private(set) var method: DIDMethod = .plc
+    public private(set) static var method: DIDMethod = .plc
 
     public var identifier: String
 
@@ -33,7 +33,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
         let components = didString.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
 
         let methodString = String(components[1])
-        guard DIDMethod.plc.rawValue == method.rawValue else {
+        guard DIDMethod.plc.rawValue == DIDPLCIdentifier.method.rawValue else {
             throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
         }
 
@@ -98,6 +98,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
 
         for (index, character) in didIdentifier.unicodeScalars.enumerated() {
             guard allowedCharacters.contains(character) else {
+                throw DIDValidatorError.disallowedCharacter(position: index, character: Character(character))
                 throw DIDValidatorError.disallowedCharacter(position: index, character: Character(character))
             }
         }

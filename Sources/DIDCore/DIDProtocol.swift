@@ -13,7 +13,7 @@ public protocol DIDProtocol: Codable, Equatable, CustomStringConvertible {
     /// The method name component of the decentralized identifier (DID).
     ///
     /// Currently, the AT Protocol "blesses" `plc` and `web`.
-    static var method: DIDMethod { get }
+    var method: DIDMethod { get }
 
     /// The method-specific identifier component.
     var identifier: String { get }
@@ -35,7 +35,7 @@ public protocol DIDProtocol: Codable, Equatable, CustomStringConvertible {
 extension DIDProtocol {
 
     public var description: String {
-        "\(Self.prefix):\(Self.method):\(identifier)"
+        "\(Self.prefix):\(method):\(identifier)"
     }
 
     /// Validates the decentralized identifier (DID).

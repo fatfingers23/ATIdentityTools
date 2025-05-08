@@ -13,7 +13,7 @@ public struct DIDWebIdentifier: DIDProtocol {
     /// The prefix of the decentralized identifier (DID).
     ///
     /// This can only be `.web`.
-    public private(set) static var method: DIDMethod = .web
+    public private(set) var method: DIDMethod = .web
 
     public var identifier: String
 
@@ -33,7 +33,7 @@ public struct DIDWebIdentifier: DIDProtocol {
         let components = didString.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
 
         let methodString = String(components[1])
-        guard DIDMethod.plc.rawValue == DIDWebIdentifier.method.rawValue else {
+        guard self.method.rawValue == methodString else {
             throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
         }
 

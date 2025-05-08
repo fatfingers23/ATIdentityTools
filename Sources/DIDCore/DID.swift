@@ -17,13 +17,13 @@ public struct DID: DIDProtocol {
     /// The method name component of the decentralized identifier (DID).
     ///
     /// Currently, the AT Protocol "blesses" `plc` and `web`.
-    public private(set) static var method: DIDMethod = .plc
+    public let method: DIDMethod
 
     /// The method-specific identifier component.
     public let identifier: String
 
     public var description: String {
-        return "\(DID.prefix):\(DID.method.rawValue):\(self.identifier)"
+        return "\(DID.prefix):\(method.rawValue):\(self.identifier)"
     }
 
     /// The prefix of of the decentralized identifier (DID).
@@ -45,7 +45,7 @@ public struct DID: DIDProtocol {
             throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
         }
 
-        DID.method = method
+        self.method = method
         self.identifier = String(components[2])
     }
 }

@@ -98,8 +98,8 @@ public struct DIDPLCIdentifier: DIDProtocol {
 
         for (index, character) in didIdentifier.unicodeScalars.enumerated() {
             guard allowedCharacters.contains(character) else {
-                throw DIDValidatorError.disallowedCharacter(position: index, character: Character(character))
-                throw DIDValidatorError.disallowedCharacter(position: index, character: Character(character))
+                let finalIndex = index + DIDPLCIdentifier.prefix.count + DIDPLCIdentifier.method.rawValue.count
+                throw DIDValidatorError.disallowedCharacter(position: finalIndex, character: Character(character))
             }
         }
 

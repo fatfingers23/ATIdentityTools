@@ -101,6 +101,25 @@ public struct DIDWebIdentifier: DIDProtocol {
     ///
     /// - Parameter identifier: The identifier portion of the decentralized identifier (DID).
     public static func convertDIDWebToURL(identifier: String) throws -> URL {
+        guard var urlComponents = URLComponents(string: identifier) else {
+            throw DIDValidatorError.invalidURL(url: identifier)
+        }
+
+        if urlComponents.host == "localhost" {
+            urlComponents.scheme = "http"
+
+            guard let localhostPort = urlComponents.port,
+                  let localhostURL = URL(string: "http://localhost:\(localhostPort)") else {
+                throw DIDValidatorError.invalidURL(url: identifier)
+            }
+
+            return localhostURL
+        } else {
+            guard urlComponents.port == nil else {
+                throw DIDValidatorError.urlHasPortNumberWithoutLocalhost
+            }
+        }
+
         let allowedWebsiteCharacters = CharacterSet.uppercaseLetters
             .union(.lowercaseLetters)
             .union(.decimalDigits)
@@ -108,18 +127,6 @@ public struct DIDWebIdentifier: DIDProtocol {
 
         guard identifier.rangeOfCharacter(from: allowedWebsiteCharacters.inverted) == nil else {
             throw DIDValidatorError.invalidURL(url: identifier)
-        }
-
-        guard var urlComponents = URLComponents(string: identifier) else {
-            throw DIDValidatorError.invalidURL(url: identifier)
-        }
-
-        if urlComponents.host == "localhost" {
-            urlComponents.scheme = "http"
-        } else {
-            guard urlComponents.port == nil else {
-                throw DIDValidatorError.urlHasPortNumberWithoutLocalhost
-            }
         }
 
         guard let newURL = urlComponents.url else {

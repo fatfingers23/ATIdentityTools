@@ -14,8 +14,6 @@ import Testing
 
         @Test("Identify all valid did:plc DIDs.", arguments: DIDs.valid)
         func identifyValidDIDPlcs(did: String) throws {
-            let didPlc = try DIDPLCIdentifier(did)
-
             #expect(throws: Never.self, "DID \(did) should be valid.", performing: {
                 try DIDPLCIdentifier(did)
             })

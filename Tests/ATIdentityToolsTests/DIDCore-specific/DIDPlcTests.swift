@@ -20,8 +20,10 @@ import Testing
         }
 
         @Test("Identify all invalid did:plc DIDs.", arguments: zip(DIDs.invalid.keys, DIDs.invalid.values))
-        func identifyInvalidDIDPlcs(invalidDID: String, didValidationError: DIDValidatorError) throws {
-
+        func identifyInvalidDIDPlcs(invalidDID: String, didValidationError: String) throws {
+            #expect(throws: DIDValidatorError.self, "did:plc \(invalidDID) should not be valid: \(didValidationError)", performing: {
+                try DIDPLCIdentifier(invalidDID)
+            })
         }
     }
 
@@ -29,12 +31,16 @@ import Testing
 
         @Test("Validates the valid did:plc DIDs.", arguments: DIDs.valid)
         func validateValidDIDPlcs(did: String) throws {
-
+            #expect(throws: Never.self, "DID \(did) should be valid.", performing: {
+                try DIDPLCIdentifier.validate(did: did)
+            })
         }
 
         @Test("Invalidate invalid did:plc DIDs.", arguments: zip(DIDs.invalid.keys, DIDs.invalid.values))
-        func invalidateInvalidDIDPlcs(invalidDID: String, didValidationError: DIDValidatorError) throws {
-            
+        func invalidateInvalidDIDPlcs(invalidDID: String, didValidationError: String) throws {
+            #expect(throws: DIDValidatorError.self, "did:plc \(invalidDID) should not be valid: \(didValidationError)", performing: {
+                try DIDPLCIdentifier.validate(did: invalidDID)
+            })
         }
     }
 
@@ -47,21 +53,21 @@ import Testing
             ]
         }
 
-        public static var invalid: [String: DIDValidatorError] {
+        public static var invalid: [String: String] {
             return [
-                "did:plc:l3rouwludahu3ui3bt66mfv0": .disallowedCharacter(position: 31, character: "0"),
-                "did:plc:l3rouwludahu3ui3bt66mfv1": .disallowedCharacter(position: 31, character: "1"),
-                "did:plc:l3rouwludahu3ui3bt66mfv9": .disallowedCharacter(position: 31, character: "9"),
-                "did:plc:l3rouwludahu3ui3bt66mfv": .tooShort,
-                "did:plc:l3rouwludahu3ui3bt66mfvja": .tooShort,
-                "did:plc:example.com:": .tooShort,
-                "did:plc:exam%3Aple.com%3A8080": .tooShort,
-                "did::l3rouwludahu3ui3bt66mfvj": .emptyMethodName,
-                "did:plc:foo.com": .tooShort,
-                "": .emptyDID,
-                "random-string": .missingPrefix,
-                "did plc": .missingColonAfterPrefix,
-                "lorem ipsum dolor sit": .missingPrefix
+                "did:plc:l3rouwludahu3ui3bt66mfv0": "Disallowed character '0' in DID at identifier position 31.",
+                "did:plc:l3rouwludahu3ui3bt66mfv1": "Disallowed character '1' in DID at identifier position 31.",
+                "did:plc:l3rouwludahu3ui3bt66mfv9": "Disallowed character '9' in DID at identifier position 31.",
+                "did:plc:l3rouwludahu3ui3bt66mfv": "DID is too short. did:plc DIDs must have the exact size of 32 characters.",
+                "did:plc:l3rouwludahu3ui3bt66mfvja": "did:plc is too long. There's a maximum limit of 32 characters.",
+                "did:plc:example.com:": "tooShort",
+                "did:plc:exam%3Aple.com%3A8080": "DID is too short. did:plc DIDs must have the exact size of 32 characters.",
+                "did::l3rouwludahu3ui3bt66mfvj": "DID method name must not be empty.",
+                "did:plc:foo.com": "DID is too short. did:plc DIDs must have the exact size of 32 characters.",
+                "": "DID is empty.",
+                "random-string": "DID requires \'did\' prefix.",
+                "did plc": "Missing colon after the \'did\' prefix.",
+                "lorem ipsum dolor sit": "DID requires \'did\' prefix."
             ]
         }
     }

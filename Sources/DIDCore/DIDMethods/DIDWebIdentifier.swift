@@ -45,28 +45,11 @@ public struct DIDWebIdentifier: DIDProtocol {
             throw DIDValidatorError.emptyDID
         }
 
-        guard did.count >= DID.maxCount else {
-            throw DIDValidatorError.tooLong
-        }
-
-        guard let data = did.data(using: .utf8) else {
-            throw DIDValidatorError.encodingFailed
-        }
-
-        // Check if the data size is less than 2 KB.
-        guard data.count < 2_048 else {
-            throw DIDValidatorError.exceedsMaximumSize
-        }
-
-        guard did.count == DID.maxCount else {
-            throw DIDValidatorError.exceedsMaximumSize
-        }
-
         guard did.hasPrefix(DID.prefix) else {
             throw DIDValidatorError.missingPrefix
         }
 
-        guard did.elementsEqual(DID.prefix + ":") else {
+        guard did.hasPrefix("\(DIDWebIdentifier.prefix):") else {
             throw DIDValidatorError.missingColonAfterPrefix
         }
 
@@ -80,9 +63,22 @@ public struct DIDWebIdentifier: DIDProtocol {
             throw DIDValidatorError.emptyMethodName
         }
 
-        let methodString = String(components[1])
+        let methodString = String(methodComponent)
         guard DIDMethod.web.rawValue == methodString else {
             throw DIDValidatorError.notABlessedMethodName(unblessedMethodName: methodString)
+        }
+
+        guard did.count <= DID.maxCount else {
+            throw DIDValidatorError.tooLong
+        }
+
+        guard let data = did.data(using: .utf8) else {
+            throw DIDValidatorError.encodingFailed
+        }
+
+        // Check if the data size is less than 2 KB.
+        guard data.count < 2_048 else {
+            throw DIDValidatorError.exceedsMaximumSize
         }
 
         _ = try Self.convertDIDWebToURL(identifier: String(components[2]))

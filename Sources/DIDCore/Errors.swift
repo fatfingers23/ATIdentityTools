@@ -154,7 +154,10 @@ public enum DIDValidatorError: Error, Equatable, LocalizedError, CustomStringCon
     case invalidPercentEncoding(position: Int)
 
     /// A trailing colon has been found in the decentralized identifier (DID).
-    case trailingColonNotAllowed
+    case trailingColonFoundInDID
+
+    /// A method segment begins or ends with a colon character.
+    case methodSegmentStartsOrEndsWithColon
 
     /// The URL of the `did:web` decentralized identifier (DID) is invalid.
     ///
@@ -198,8 +201,10 @@ public enum DIDValidatorError: Error, Equatable, LocalizedError, CustomStringCon
                 return "Disallowed character '\(character)' in DID at identifier position \(position)."
             case .invalidPercentEncoding(let position):
                 return "Incomplete percent-encoded sequence starting at position \(position)."
-            case .trailingColonNotAllowed:
+            case .trailingColonFoundInDID:
                 return "Trailing colons are not allowed in a DID."
+            case .methodSegmentStartsOrEndsWithColon:
+                return "Method segment cannot start or end with a colon."
             case .invalidURL(let url):
                 return "Invalid URL: \(url)"
             case .urlHasPortNumberWithoutLocalhost:

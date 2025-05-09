@@ -28,7 +28,7 @@ public struct DIDWebIdentifier: DIDProtocol {
     ///
     /// - Parameter didString: The raw decentralized identifier (DID) string.
     public init(_ didString: String) throws {
-        try DID.validate(did: didString)
+        try DIDWebIdentifier.validate(did: didString)
 
         let components = didString.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
 
@@ -56,6 +56,19 @@ public struct DIDWebIdentifier: DIDProtocol {
         let components = did.split(separator: ":", maxSplits: 2, omittingEmptySubsequences: false)
         guard components.count >= 2 else {
             throw DIDValidatorError.missingColonAfterPrefix
+        }
+
+        guard components.count == 3 else {
+            throw DIDValidatorError.invalidDID
+        }
+
+        let identifier = String(components[2])
+        guard !identifier.isEmpty else {
+            throw DIDValidatorError.emptyIdentifier
+        }
+
+        guard !identifier.hasPrefix(":"), !identifier.hasSuffix(":") else {
+            throw DIDValidatorError.methodSegmentStartsOrEndsWithColon
         }
 
         let methodComponent = components[1]
@@ -88,6 +101,15 @@ public struct DIDWebIdentifier: DIDProtocol {
     ///
     /// - Parameter identifier: The identifier portion of the decentralized identifier (DID).
     public static func convertDIDWebToURL(identifier: String) throws -> URL {
+        let allowedWebsiteCharacters = CharacterSet.uppercaseLetters
+            .union(.lowercaseLetters)
+            .union(.decimalDigits)
+            .union(CharacterSet(charactersIn: "-._~"))
+
+        guard identifier.rangeOfCharacter(from: allowedWebsiteCharacters.inverted) == nil else {
+            throw DIDValidatorError.invalidURL(url: identifier)
+        }
+
         guard var urlComponents = URLComponents(string: identifier) else {
             throw DIDValidatorError.invalidURL(url: identifier)
         }

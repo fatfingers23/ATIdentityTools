@@ -101,7 +101,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
         }
 
         if didIdentifier.hasSuffix(":") {
-            throw DIDValidatorError.trailingColonNotAllowed
+            throw DIDValidatorError.trailingColonFoundInDID
         }
     }
 }

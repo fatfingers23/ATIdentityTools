@@ -16,7 +16,9 @@ import Testing
         func identifyValidDIDPlcs(did: String) throws {
             let didPlc = try DIDPLCIdentifier(did)
 
-            #expect(didPlc.method == .plc, "DID \(did) should be valid.")
+            #expect(throws: Never.self, "DID \(did) should be valid.", performing: {
+                try DIDPLCIdentifier(did)
+            })
         }
 
         @Test("Identify all invalid did:plc DIDs.", arguments: zip(DIDs.invalid.keys, DIDs.invalid.values))

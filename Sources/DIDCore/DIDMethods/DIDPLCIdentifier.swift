@@ -95,7 +95,7 @@ public struct DIDPLCIdentifier: DIDProtocol {
         for (index, character) in didIdentifier.unicodeScalars.enumerated() {
             guard allowedCharacters.contains(character) else {
                 // "did" + ":" + "plc" + ":" + identifier
-                let finalIndex = 3 + 1 + 3 + 1 + index + 1
+                let finalIndex = 3 + 1 + 3 + 1 + index
                 throw DIDValidatorError.disallowedCharacter(position: finalIndex, character: Character(character))
             }
         }

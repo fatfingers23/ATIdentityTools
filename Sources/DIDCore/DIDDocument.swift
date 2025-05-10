@@ -200,7 +200,7 @@ public struct DIDDocument: Codable, Equatable {
 
             /// Initializes a `DIDRelativeURI` from a raw string.
             ///
-            /// - Parameter raw: The URI string to parse.
+            /// - Parameter did: The URI string to parse.
             ///
             /// - Throws: `DIDValidatorError.invalidDIDRelativeURI` if the input is not a valid URI or fragment.
             public init(_ did: String) throws {

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ATProtoKit/ATIdentityTools/blob/main/Sources/ATIdentityTools/Documentation.docc/Resources/atidentitytools_icon.png" height="128" alt="An icon for ATIdentityTools, which contains three stacks of rounded rectangles in an isometric top view. At the top stack, there's an icon of a card with lines on the right side to signify information. On the left side, the at symbol is in a thich weight, with a pointed arrow at the tip, is displayed. The three stacks are, from top to bottom, blue, then two shades of purple.">
+  <img src="https://github.com/ATProtoKit/ATIdentityTools/blob/main/Sources/ATIdentityTools/Documentation.docc/Resources/atidentitytools_icon.png" height="128" alt="An icon for ATIdentityTools, which contains three stacks of rounded rectangles in an isometric top view. At the top stack, there's an icon of a card with lines on the right side to signify information. On the left side, the at symbol is in a thick weight, with a pointed arrow at the tip, is displayed. The three stacks are, from top to bottom, blue, then two shades of purple.">
 </p>
 
 <h1 align="center">ATIdentityTools</h1>

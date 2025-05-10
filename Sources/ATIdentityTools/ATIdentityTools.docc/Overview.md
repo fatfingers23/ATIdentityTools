@@ -1,6 +1,6 @@
 # ``ATIdentityTools``
 
-<!--@START_MENU_TOKEN@-->Summary<!--@END_MENU_TOKEN@-->
+Identify and validate identities in the AT Protocol.
 
 ## Overview
 

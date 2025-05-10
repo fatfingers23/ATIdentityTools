@@ -21,11 +21,19 @@ let package = Package(
             name: "DIDCore",
             targets: ["DIDCore"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/ATProtoKit/ATCommonTools.git", .upToNextMajor(from: "0.0.1"))
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "ATIdentityTools"),
+            name: "ATIdentityTools",
+            dependencies: [
+                .product(name: "ATCommonTools", package: "atcommontools"),
+                .product(name: "ATCommonWeb", package: "atcommontools")
+            ]
+        ),
         .target(
             name: "DIDCore"),
         .testTarget(

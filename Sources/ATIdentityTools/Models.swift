@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ATCommonWeb
 
 /// A list of options as a result of resolving an identity.
 public struct IdentityResolverOptions {
@@ -16,8 +17,8 @@ public struct IdentityResolverOptions {
     /// The URL of the `did:plc`. Optional.
     public let plcURL: URL?
 
-    // TODO: Change to the DIDCache protocol.
-    public let didCache: String
+    /// A cache of the identity.
+    public let didCache: DIDCache
 
     /// An array of backup nameservers for the identity. Optional.
     public let backupNameservers: [String]?
@@ -43,7 +44,7 @@ public struct DIDResolverOptions {
     public let plcURL: URL?
 
     // TODO: Change to the DIDCache protocol.
-    public let didCache: String?
+    public let didCache: DIDCache?
 }
 
 /// A container of an AT Protocol identity.
@@ -68,8 +69,8 @@ public struct CacheResult {
     /// The decentralized identifier (DID) of the identity.
     public let did: String
 
-    // TODO: Replace with the actual DIDDocument model from ATCommonTools.
-    public let didDocument: String
+    /// THe DID document attached to the identity.
+    public let didDocument: DIDDocument
 
     /// The date and time the cache as been updated.
     public let updatedAt: Date
@@ -90,7 +91,7 @@ public protocol DIDCache {
     ///   - did: The decentralized identifier (DID).
     ///   - didDocument: The DID document.
     ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache.
-    func cacheDID(_ did: String, didDocument: String, previousCache: CacheResult) async throws
+    func cacheDID(_ did: String, didDocument: DIDDocument, previousCache: CacheResult) async throws
 
     /// Checks if the decentralized identifier (DID) is in the cache.
     ///
@@ -99,7 +100,7 @@ public protocol DIDCache {
     ///   - didDocument: The DID document.
     ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache.
     /// - Returns: An instance of `CacheResult`, containing
-    func checkCache(from did: String, didDocument: String, previousCache: CacheResult) async throws -> CacheResult?
+    func checkCache(from did: String, didDocument: DIDDocument, previousCache: CacheResult) async throws -> CacheResult?
 
     /// Refreshes a cache from a given decentralized identifier (DID).
     ///
@@ -108,7 +109,7 @@ public protocol DIDCache {
     ///   - didDocument: An asyncronous closure with respect to the DID Document. Returns an instance
     ///   of `DIDDocument`.
     ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache.
-    func refreshCache(from did: String, didDocument: @escaping () async throws -> String?, previousCache: CacheResult) async throws
+    func refreshCache(from did: String, didDocument: @escaping () async throws -> DIDDocument?, previousCache: CacheResult) async throws
 
     /// Clears the cache entry for the given decentralized identifier (DID).
     ///

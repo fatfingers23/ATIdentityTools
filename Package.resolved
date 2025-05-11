@@ -5,8 +5,26 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ATProtoKit/ATCommonTools.git",
       "state" : {
-        "revision" : "93ef70fc56b4e7ef88783b753a25b38f9a5b3c7a",
-        "version" : "0.0.3"
+        "revision" : "e6982b1d77fca7ab3042bc50b747f8a60d07929b",
+        "version" : "0.0.5"
+      }
+    },
+    {
+      "identity" : "atcryptography",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ATProtoKit/ATCryptography.git",
+      "state" : {
+        "revision" : "df85f7f506d370a055bd89ff0ea4a21937ac24f4",
+        "version" : "0.1.3"
+      }
+    },
+    {
+      "identity" : "bigint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/attaswift/BigInt.git",
+      "state" : {
+        "revision" : "114343a705df4725dfe7ab8a2a326b8883cfd79c",
+        "version" : "5.5.1"
       }
     },
     {
@@ -34,6 +52,15 @@
       "state" : {
         "revision" : "e8d6eba1fef23ae5b359c46b03f7d94be2f41fed",
         "version" : "3.12.3"
+      }
+    },
+    {
+      "identity" : "swift-secp256k1",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/21-DOT-DEV/swift-secp256k1.git",
+      "state" : {
+        "revision" : "57ce9af6db14e0114af631ace25231a9d0ccccbd",
+        "version" : "0.18.0"
       }
     }
   ],

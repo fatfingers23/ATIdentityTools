@@ -22,7 +22,8 @@ let package = Package(
             targets: ["DIDCore"])
     ],
     dependencies: [
-        .package(url: "https://github.com/ATProtoKit/ATCommonTools.git", .upToNextMajor(from: "0.0.1"))
+        .package(url: "https://github.com/ATProtoKit/ATCommonTools.git", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/ATProtoKit/ATCryptography.git", from: "0.1.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -31,7 +32,8 @@ let package = Package(
             name: "ATIdentityTools",
             dependencies: [
                 .product(name: "ATCommonTools", package: "atcommontools"),
-                .product(name: "ATCommonWeb", package: "atcommontools")
+                .product(name: "ATCommonWeb", package: "atcommontools"),
+                .product(name: "ATCryptography", package: "atcryptography")
             ]
         ),
         .target(

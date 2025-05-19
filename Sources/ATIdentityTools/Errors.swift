@@ -54,3 +54,23 @@ public enum ATIdentityToolsError: Error, LocalizedError, CustomStringConvertible
         return errorDescription ?? String(describing: self)
     }
 }
+
+/// Errors that can occur with respect to ``ATProtoDocument``.
+public enum ATProtoDocumentError: Error, LocalizedError, CustomStringConvertible {
+
+    /// The key type is unsupported.
+    ///
+    /// - Parameter didKeyType: The `did:key` type.
+    case unsupportedKeyType(didKeyType: String)
+
+    public var errorDescription: String? {
+        switch self {
+            case .unsupportedKeyType(let didKeyType):
+                return "Unsupported did:key type: \(didKeyType)"
+        }
+    }
+
+    public var description: String {
+        return errorDescription ?? String(describing: self)
+    }
+}

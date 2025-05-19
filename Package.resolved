@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ATProtoKit/ATCommonTools.git",
       "state" : {
-        "revision" : "c707bb9e875601247417c9da0aff1626786ecb54",
-        "version" : "0.0.6"
+        "revision" : "b8151c2727d5b5145c7df126d6147c528fcf2dab",
+        "version" : "0.0.7"
       }
     },
     {

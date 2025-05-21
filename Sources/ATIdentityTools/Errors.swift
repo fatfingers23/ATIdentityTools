@@ -10,6 +10,9 @@ import Foundation
 /// Errors that can occur with respect to identities.
 public enum ATIdentityToolsError: Error, LocalizedError, CustomStringConvertible {
 
+    /// The JSON object is invaalid.
+    case invalidJSON
+
     /// The decentralized identifier (DID) was not found.
     ///
     /// - Parameter did: The decentralized identifier (DID) that wasn't found.
@@ -37,6 +40,8 @@ public enum ATIdentityToolsError: Error, LocalizedError, CustomStringConvertible
 
     public var errorDescription: String? {
         switch self {
+            case .invalidJSON:
+                return "The JSON object is invalid."
             case .didNotFound(let did):
                 return "The DID, '\(did)', was not found."
             case .poorlyFormattedDID(let did):

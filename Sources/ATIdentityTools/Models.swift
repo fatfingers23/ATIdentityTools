@@ -108,8 +108,8 @@ public protocol DIDCache {
     ///   - did: The decentralized identifier (DID).
     ///   - didDocument: An asyncronous closure with respect to the DID Document. Returns an instance
     ///   of `DIDDocument`.
-    ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache.
-    func refreshCache(from did: String, didDocument: @escaping () async throws -> DIDDocument?, previousCache: CacheResult) async throws
+    ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache. Optional.
+    func refreshCache(from did: String, didDocument: @escaping () async throws -> DIDDocument?, previousCache: CacheResult?) async throws
 
     /// Clears the cache entry for the given decentralized identifier (DID).
     ///

@@ -43,7 +43,7 @@ public struct DIDResolverOptions {
     /// The URL of the `did:plc`. Optional.
     public let plcURL: URL?
 
-    // TODO: Change to the DIDCache protocol.
+    /// A model that caches decentralized identifiers (DIDs).
     public let didCache: DIDCache?
 }
 

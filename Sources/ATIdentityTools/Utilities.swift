@@ -13,14 +13,7 @@ extension String {
     ///
     /// This is to more cloestly mimic JavaScript's `encodeURIComponent` behavior.
     ///
-    /// Note: If the encoding fails, the original string will be returned.
-    ///
-    /// Example usage:
-    /// ```
-    /// let raw = "user:example/did"
-    /// let encoded = raw.encodedForURIComponent
-    /// // encoded is "user%3Aexample%2Fdid"
-    /// ```
+    /// - Note: If the encoding fails, the original string will be returned.
     var encodedForURIComponent: String {
         // This matches JavaScript's encodeURIComponent behavior
         let generalDelimitersToEncode = ":#[]@"
@@ -30,5 +23,14 @@ extension String {
         allowed.remove(charactersIn: generalDelimitersToEncode + subDelimitersToEncode)
 
         return self.addingPercentEncoding(withAllowedCharacters: allowed) ?? self
+    }
+
+    /// Decodes the string from a URI component.
+    ///
+    /// This is to more cloestly mimic JavaScript's `decodeURIComponent` behaviour.
+    ///
+    /// - Note: If the decoding fails, the original string will be returned.
+    var decodedFromURIComponent: String {
+        return self.removingPercentEncoding ?? self
     }
 }

@@ -90,17 +90,14 @@ public protocol DIDCache {
     /// - Parameters:
     ///   - did: The decentralized identifier (DID).
     ///   - didDocument: The DID document.
-    ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache.
-    func cacheDID(_ did: String, didDocument: DIDDocument, previousCache: CacheResult) async throws
+    ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache. Optional.
+    func cacheDID(_ did: String, didDocument: DIDDocument, previousCache: CacheResult?) async throws
 
     /// Checks if the decentralized identifier (DID) is in the cache.
     ///
-    /// - Parameters:
-    ///   - did: The decentralized identifier (DID).
-    ///   - didDocument: The DID document.
-    ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache.
+    /// - Parameter did: The decentralized identifier (DID).
     /// - Returns: An instance of `CacheResult`, containing
-    func checkCache(from did: String, didDocument: DIDDocument, previousCache: CacheResult) async throws -> CacheResult?
+    func checkCache(from did: String) async throws -> CacheResult?
 
     /// Refreshes a cache from a given decentralized identifier (DID).
     ///

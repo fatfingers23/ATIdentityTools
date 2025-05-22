@@ -33,6 +33,11 @@ public enum ATIdentityToolsError: Error, LocalizedError, CustomStringConvertible
     /// - Parameter did: The decentralized identifier (DID) that the DID Document is linked to.
     case poorlyFormattedDIDDocument(did: String)
 
+    /// The provided DID document is incomplete.
+    ///
+    /// - Parameter did: The decentralized identifier (DID) that the DID Document is linked to.
+    case incompleteDIDDocument(did: String)
+
     /// The web path for the `did:web` is unsupported.
     ///
     /// - Parameter did: The `did:web` that contains the unsupported web path.
@@ -50,6 +55,8 @@ public enum ATIdentityToolsError: Error, LocalizedError, CustomStringConvertible
                 return "'did:\(didMethod)' is not supported."
             case .poorlyFormattedDIDDocument(let did):
                 return "The DID Document for '\(did)' was poorly formatted."
+            case .incompleteDIDDocument(let did):
+                return "The DID Document for '\(did)' is incomplete."
             case .unsupportedDIDWebPath(let did):
                 return "The web path for '\(did)' is unsupported."
         }
@@ -60,7 +67,7 @@ public enum ATIdentityToolsError: Error, LocalizedError, CustomStringConvertible
     }
 }
 
-/// Errors that can occur with respect to ``ATProtoDocument``.
+/// Errors that can occur with respect to ``ATProtoData``.
 public enum ATProtoDocumentError: Error, LocalizedError, CustomStringConvertible {
 
     /// The key type is unsupported.
@@ -68,10 +75,15 @@ public enum ATProtoDocumentError: Error, LocalizedError, CustomStringConvertible
     /// - Parameter didKeyType: The `did:key` type.
     case unsupportedKeyType(didKeyType: String)
 
+    /// The signing key has not been found.
+    case signingKeyNotFound
+
     public var errorDescription: String? {
         switch self {
             case .unsupportedKeyType(let didKeyType):
                 return "Unsupported did:key type: \(didKeyType)"
+            case .signingKeyNotFound:
+                return "Signing key not found."
         }
     }
 

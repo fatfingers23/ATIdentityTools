@@ -91,3 +91,20 @@ public enum ATProtoDocumentError: Error, LocalizedError, CustomStringConvertible
         return errorDescription ?? String(describing: self)
     }
 }
+
+public enum DIDResolverError: Error, LocalizedError, CustomStringConvertible {
+
+    /// The URL request failed.
+    case requestFailed(resolver: String, code: Int, message: String)
+
+    public var errorDescription: String? {
+        switch self {
+            case .requestFailed(let resolver, let code, let message):
+                return "Request to \(resolver) failed with status code \(code): \(message)"
+        }
+    }
+
+    public var description: String {
+        return errorDescription ?? String(describing: self)
+    }
+}

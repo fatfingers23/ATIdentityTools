@@ -83,7 +83,7 @@ public struct CacheResult {
 }
 
 /// A protocol used to manage caches for decentralized identifiers (DIDs).
-public protocol DIDCache {
+public protocol DIDCache: Sendable {
 
     /// Caches the given DID document, optionally using a previous cache result.
     ///

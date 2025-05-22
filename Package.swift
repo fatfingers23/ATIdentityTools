@@ -23,7 +23,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/ATProtoKit/ATCommonTools.git", .upToNextMajor(from: "0.0.1")),
-        .package(url: "https://github.com/ATProtoKit/ATCryptography.git", from: "0.1.0")
+        .package(url: "https://github.com/ATProtoKit/ATCryptography.git", from: "0.1.0"),
+        .package(url: "https://github.com/apple/swift-async-dns-resolver", .upToNextMajor(from: "0.1.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -33,7 +34,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ATCommonTools", package: "atcommontools"),
                 .product(name: "ATCommonWeb", package: "atcommontools"),
-                .product(name: "ATCryptography", package: "atcryptography")
+                .product(name: "ATCryptography", package: "atcryptography"),
+                .product(name: "AsyncDNSResolver", package: "swift-async-dns-resolver")
             ]
         ),
         .target(

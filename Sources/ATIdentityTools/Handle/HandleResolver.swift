@@ -24,7 +24,7 @@ public actor HandleResolver: Sendable {
     public let backupNameservers: [String]?
 
     /// An array of IP addresses for the backup nameservers. Optional.
-    public var backupNameserverIPs: [String]?
+    public var backupNameserverIPs: [String]? = []
 
     /// Initializes an instance of `HandleResolver`.
     ///
@@ -167,12 +167,13 @@ public actor HandleResolver: Sendable {
     /// - Returns: An array of IP addresses for backup nameservers, or `nil` if no backup nameservers can
     /// be found.
     public func getBackupNameserverIPs() async -> [String]? {
-        guard let backupNameservers = self.backupNameservers else {
-            return nil
+        guard let backupNameservers = self.backupNameservers, !backupNameservers.isEmpty else {
+            return backupNameservers
         }
 
         do {
             let resolver = try AsyncDNSResolver()
+            var ipAddressResults: [String] = []
 
             for ipAddress in backupNameservers {
                 let recordResult: String
@@ -185,7 +186,7 @@ public actor HandleResolver: Sendable {
                     continue
                 }
 
-                self.backupNameserverIPs?.append(recordResult)
+                ipAddressResults.append(recordResult)
             }
 
             return self.backupNameserverIPs

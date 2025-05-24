@@ -4,7 +4,7 @@ Identify and validate Decentralized Identifiers in the AT Protocol.
 
 ## Overview
 
-``DIDCore`` is a foundational Swift package for working with Decentralized Identifiers (DIDs) as specified by [W3C DID Core](https://www.w3.org/TR/did-core/) and used in the AT Protocol ecosystem. This library enables developers to construct, validate, parse, and work with DIDs and DID Documents—ensuring strict compliance with both the W3C standards and AT Protocol-specific requirements.
+``DIDCore`` is a foundational Swift package for working with Decentralized Identifiers (DIDs) as specified by the [W3C DID Specifications](https://www.w3.org/TR/did-core/) and used in the AT Protocol ecosystem. This library enables developers to construct, validate, parse, and work with DIDs and DID Documents—ensuring strict compliance with both the W3C standards and AT Protocol-specific requirements.
 
 A Decentralized Identifier (DID) is a unique string, such as `did:plc:abcd1234efgh5678ijkl9012mnop3456`, that identifies an entity in a decentralized system. DIDs are used for identity, authentication, and data integrity across decentralized networks.
 

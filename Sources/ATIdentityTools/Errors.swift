@@ -92,6 +92,7 @@ public enum ATProtoDocumentError: Error, LocalizedError, CustomStringConvertible
     }
 }
 
+/// Errors that can occur when validating decentralized identifiers (DIDs).
 public enum DIDResolverError: Error, LocalizedError, CustomStringConvertible {
 
     /// The URL request failed.

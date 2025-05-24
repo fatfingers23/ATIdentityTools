@@ -1,5 +1,13 @@
 # ``ATIdentityTools``
 
+@Metadata {
+    @PageImage(
+        purpose: icon, 
+        source: "atidentitytools_icon", 
+        alt: "A technology icon representing the ATIdentityTools framework.")
+    @PageColor(blue)
+}
+
 Identify and validate identities in the AT Protocol.
 
 ## Overview

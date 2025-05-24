@@ -20,6 +20,23 @@ Further reading: [The DID section](https://atproto.com/specs/did) of the AT Prot
 
 ## Topics
 
-### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
+### DIDs
 
-- <!--@START_MENU_TOKEN@-->``Symbol``<!--@END_MENU_TOKEN@-->
+- ``DID``
+- ``DIDProtocol``
+
+### DID Methods
+
+- ``DIDPLCIdentifier``
+- ``DIDWebIdentifier``
+- ``DIDMethod``
+
+### DID Documents
+
+- ``DIDDocument``
+
+### Error Handling
+
+- ``DIDError``
+- ``DIDValidatorError``
+- ``DIDDocumentValidatorError``

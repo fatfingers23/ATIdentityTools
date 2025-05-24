@@ -18,7 +18,7 @@ You can use it in ATProtoKit packages or any ATProto packages unrelated to ATPro
 
 A child package, DIDCore, is also available, which specifically lets you identify and validate decentralized identifiers (DIDs).
 
-ATIdentityTools is fully open source under the [Apache 2.0 license](https://github.com/ATProtoKit/ATIdentityTools/blob/main/LICENSE.md). You can take a look at it and make contributions to it [on GitHub](https://github.com/ATProtoKit/ATIdentityTools). Some of the documentation has been copied or adapted from [Bluesky's atproto repo](https://github.com/bluesky-social/atproto).
+ATIdentityTools is fully open source under the [Apache 2.0 license](https://github.com/ATProtoKit/ATIdentityTools/blob/main/LICENSE.md). You can take a look at it and make contributions to it [on GitHub](https://github.com/ATProtoKit/ATIdentityTools).
 
 ## Topics
 

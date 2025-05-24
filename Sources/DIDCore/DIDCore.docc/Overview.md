@@ -18,6 +18,8 @@ Further reading: [The DID section](https://atproto.com/specs/did) of the AT Prot
 - Includes robust, type-safe representations of DIDs and DID Documents.
 - Ensures DID Documents are compliant with both the W3C and AT Protocol.
 
+ATIdentityTools is fully open source under the [Apache 2.0 license](https://github.com/ATProtoKit/ATIdentityTools/blob/main/LICENSE.md). You can take a look at it and make contributions to it [on GitHub](https://github.com/ATProtoKit/ATIdentityTools).
+
 ## Topics
 
 ### DIDs

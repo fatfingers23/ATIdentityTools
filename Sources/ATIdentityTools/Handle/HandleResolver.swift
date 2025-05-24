@@ -150,7 +150,7 @@ public actor HandleResolver: Sendable {
     /// Parses the results of a DNS TXT record lookup to extract a valid
     /// decentralized identifier (DID) value.
     ///
-    /// - Parameter chunckedResult: An array of TXT records.
+    /// - Parameter chuckedResult: An array of TXT records.
     /// - Returns: A valid TXT record, which contains a decentralized identifier (DID), or `nil`
     /// (if there is none).
     public func parseDNSResult(chuckedResult: [String]) async -> String? {

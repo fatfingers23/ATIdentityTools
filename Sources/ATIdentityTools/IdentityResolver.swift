@@ -22,8 +22,7 @@ public struct IdentityResolver {
     /// Initializes an instance of `IDResolver`.
     ///
     /// - Parameters:
-    ///   - handle: An instance of a handle resolver.
-    ///   - did: An instance of a decentralized identifier (DID) resolver.
+    ///   - options: A list of options for resolving identities.
     ///   - urlSession: The URL session instances used for requests.
     public init(options: IdentityResolverOptions, urlSession: URLSession = .shared) {
         self.urlSession = urlSession

@@ -91,7 +91,7 @@ public protocol DIDCache: Sendable {
     ///   - did: The decentralized identifier (DID).
     ///   - didDocument: The DID document.
     ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache. Optional.
-    func cacheDID(_ did: String, didDocument: DIDDocument, previousCache: CacheResult?) async throws
+    mutating func cacheDID(_ did: String, didDocument: DIDDocument, previousCache: CacheResult?) async throws
 
     /// Checks if the decentralized identifier (DID) is in the cache.
     ///
@@ -106,10 +106,10 @@ public protocol DIDCache: Sendable {
     ///   - didDocument: An asyncronous closure with respect to the DID Document. Returns an instance
     ///   of `DIDDocument`.
     ///   - previousCache: The previous instance of `CacheResult`, containing the previous cache. Optional.
-    func refreshCache(from did: String, didDocument: @escaping () async throws -> DIDDocument?, previousCache: CacheResult?) async throws
+    mutating func refreshCache(from did: String, didDocument: @escaping () async throws -> DIDDocument?, previousCache: CacheResult?) async throws
 
     /// Clears the cache entry for the given decentralized identifier (DID).
     ///
     /// - Parameter did: The decentralized identifier (DID) to clear.
-    func clearEntry(did: String) async throws
+    mutating func clearEntry(did: String) async throws
 }

@@ -28,10 +28,10 @@ public actor HandleResolver: Sendable {
 
     /// Initializes an instance of `HandleResolver`.
     ///
-    /// - Parameter options: A list of options for resolving handles.
-    public init(options: HandleResolverOptions) {
-        let timeout = options.timeout ?? 3_000
-        let backupNameservers = options.backupNameservers
+    /// - Parameter options: A list of options for resolving handles. Optional. Defaults to `nil`.
+    public init(options: HandleResolverOptions? = nil) {
+        let timeout = options?.timeout ?? 3_000
+        let backupNameservers = options?.backupNameservers
 
         self.timeout = timeout
         self.backupNameservers = backupNameservers

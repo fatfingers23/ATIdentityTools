@@ -13,7 +13,7 @@ import ATCryptography
 public protocol DIDDocumentResolverProtocol {
 
     /// A cache related to decentralized identifiers (DIDs).
-    var didCache: DIDCache? { get }
+    var didCache: DIDCache? { get set }
 
     /// Retrieves the raw DID Document JSON.
     ///
@@ -46,7 +46,7 @@ public protocol DIDDocumentResolverProtocol {
     /// - Parameters:
     ///   - did: The decentralized identifier (DID) related to the cached result.
     ///   - previousCache: The currently used cached result. Optional.
-    func refreshCache(did: String, previousCache: CacheResult?) async throws
+    mutating func refreshCache(did: String, previousCache: CacheResult?) async throws
 
     /// Resolves a DID Document.
     ///
@@ -58,7 +58,7 @@ public protocol DIDDocumentResolverProtocol {
     ///   - willForceRefresh: Determines whether the method should bypass any cached values and
     ///   forcefully refresh.
     /// - Returns:
-    func resolve(did: String, willForceRefresh: Bool) async throws -> DIDDocument
+    mutating func resolve(did: String, willForceRefresh: Bool) async throws -> DIDDocument
 
     /// Resolves the AT Protocol–specific metadata from a DID Document.
     ///
@@ -69,7 +69,7 @@ public protocol DIDDocumentResolverProtocol {
     /// - Returns: An `ATProtoData` object, containing extracted metadata specific to the AT Protocol.
     ///
     /// - Throws: An error if the resolution or parsing fails.
-    func resolveATProtocolData(for did: String, willForceRefresh: Bool) async throws -> ATProtoData
+    mutating func resolveATProtocolData(for did: String, willForceRefresh: Bool) async throws -> ATProtoData
 
     /// Resolves the `did:key` signing key.
     ///
@@ -77,7 +77,7 @@ public protocol DIDDocumentResolverProtocol {
     ///   - did: The decentralized identifier (DID) attached to the signing key.
     ///   - willForceRefresh: Determines whether to force refresh the resolution.
     /// - Returns: The signing key.
-    func resolveSigningKey(for did: String, willForceRefresh: Bool) async throws -> String
+    mutating func resolveSigningKey(for did: String, willForceRefresh: Bool) async throws -> String
 
     /// Determines whether the signature provided is valid.
     ///
@@ -88,7 +88,7 @@ public protocol DIDDocumentResolverProtocol {
     ///   - willForceRefresh: Determines whether the method should bypass any cached values and
     ///   forcefully refresh.
     /// - Returns: `true` if the signature is valid, or `false` if it isn't.
-    func isSignatureValid(for did: String, data: Data, signature: Data, willForceRefresh: Bool) async throws -> Bool
+    mutating func isSignatureValid(for did: String, data: Data, signature: Data, willForceRefresh: Bool) async throws -> Bool
 }
 
 extension DIDDocumentResolverProtocol {
@@ -113,13 +113,15 @@ extension DIDDocumentResolverProtocol {
         return try await self.validateDIDDocument(rawJSON, did: did)
     }
 
-    public func refreshCache(did: String, previousCache: CacheResult? = nil) async throws {
-        try await self.didCache?.refreshCache(from: did, didDocument: { [self] in
+    public mutating func refreshCache(did: String, previousCache: CacheResult? = nil) async throws {
+        var localCache = self.didCache
+        try await localCache?.refreshCache(from: did, didDocument: { [self] in
             try await self.resolveWithoutCaching(did: did)
         }, previousCache: previousCache)
+        self.didCache = localCache
     }
 
-    public func resolve(did: String, willForceRefresh: Bool = false) async throws -> DIDDocument {
+    public mutating func resolve(did: String, willForceRefresh: Bool = false) async throws -> DIDDocument {
         var fromCache: CacheResult? = nil
 
         if self.didCache != nil && !willForceRefresh {
@@ -146,7 +148,7 @@ extension DIDDocumentResolverProtocol {
 
     }
 
-    public func resolveATProtocolData(for did: String, willForceRefresh: Bool = false) async throws -> ATProtoData {
+    public mutating func resolveATProtocolData(for did: String, willForceRefresh: Bool = false) async throws -> ATProtoData {
         let didDocument = try await resolve(did: did, willForceRefresh: willForceRefresh)
 
         let atProtoData = ATProtocolDataUtilities.parseToATProtoDocument(didDocument: didDocument)
@@ -157,7 +159,7 @@ extension DIDDocumentResolverProtocol {
         return atProtoData
     }
 
-    public func resolveSigningKey(for did: String, willForceRefresh: Bool = false) async throws -> String {
+    public mutating func resolveSigningKey(for did: String, willForceRefresh: Bool = false) async throws -> String {
         if did.starts(with: "did:key") {
             return did
         } else {
@@ -172,7 +174,7 @@ extension DIDDocumentResolverProtocol {
         }
     }
 
-    public func isSignatureValid(for did: String, data: Data, signature: Data, willForceRefresh: Bool = false) async throws -> Bool {
+    public mutating func isSignatureValid(for did: String, data: Data, signature: Data, willForceRefresh: Bool = false) async throws -> Bool {
         let signingKey = try await self.resolveSigningKey(for: did, willForceRefresh: willForceRefresh)
         return try await SignatureVerifier.verifySignature(didKey: signingKey, data: [UInt8](data), signature: [UInt8](signature))
     }

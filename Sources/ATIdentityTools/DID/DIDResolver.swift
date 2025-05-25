@@ -10,9 +10,6 @@ import Foundation
 /// A structure for resolving decentralized identifiers (DIDs).
 public struct DIDResolver: DIDDocumentResolverProtocol {
 
-    /// A llist of options for resolving decentralized identifiers (DIDs).
-    public let options: DIDResolverOptions
-
     /// A dictionary of `did` method resolvers.
     public let methods: [String: DIDDocumentResolverProtocol]
 
@@ -25,21 +22,21 @@ public struct DIDResolver: DIDDocumentResolverProtocol {
     /// Initializes a new instance of `DIDResolver`.
     ///
     /// - Parameters:
-    ///   - options: A llist of options for resolving decentralized identifiers (DIDs).
+    ///   - options: A llist of options for resolving decentralized identifiers (DIDs). Optional.
+    ///   Defaults to `nil`.
     ///   - urlSession: The URL session instances used for requests. Defaults to `.shared`.
-    public init(options: DIDResolverOptions, urlSession: URLSession = .shared) {
-        self.didCache = options.didCache
-        self.options = options
+    public init(options: DIDResolverOptions? = nil, urlSession: URLSession = .shared) {
+        self.didCache = options?.didCache
         self.urlSession = urlSession
 
-        let plcURL = options.plcURL?.absoluteString ?? "https://plc.directory"
-        let timeout = options.timeout ?? 3_000
+        let plcURL = options?.plcURL?.absoluteString ?? "https://plc.directory"
+        let timeout = options?.timeout ?? 3_000
 
         self.methods = [
             "plc": DIDPLCResolver(
                 plcURL: plcURL,
                 timeout: timeout,
-                didCache: options.didCache,
+                didCache: options?.didCache,
                 urlSession: urlSession
             ),
             "web": DIDWebResolver(

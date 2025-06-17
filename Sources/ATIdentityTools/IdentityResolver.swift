@@ -14,7 +14,7 @@ public struct IdentityResolver {
     public let handle: HandleResolver
 
     /// An instance of a decentralized identifier (DID) resolver.
-    public let did: DIDResolver
+    public var did: DIDResolver
 
     /// The URL session instances used for requests.
     private let urlSession: URLSession

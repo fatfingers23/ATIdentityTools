@@ -22,6 +22,35 @@ ATIdentityTools is fully open source under the [Apache 2.0 license](https://gith
 
 ## Topics
 
-### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
+### Resolvers
 
-- <!--@START_MENU_TOKEN@-->``Symbol``<!--@END_MENU_TOKEN@-->
+- ``IdentityResolver``
+- ``IdentityResolverOptions``
+- ``HandleResolver``
+- ``HandleResolverOptions``
+- ``DIDResolver``
+- ``DIDResolverOptions``
+- ``DIDPLCResolver``
+- ``DIDWebResolver``
+- ``DIDDocumentResolverProtocol``
+
+### Identity Container
+
+- ``ATProtoData``
+
+### Caching
+
+- ``DIDCache``
+- ``CacheResult``
+- ``MemoryCache``
+
+### Utilities
+
+- ``ATProtocolDataUtilities``
+- ``DIDUtilities``
+
+### Error Handing
+
+- ``ATIdentityToolsError``
+- ``ATProtoDocumentError``
+- ``DIDResolverError``

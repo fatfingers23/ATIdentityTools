@@ -72,7 +72,7 @@ For Linux, you need to use Swift 6.0 or later. On Linux, the minimum requirement
 You can also use this project for any programs you make using Swift and running on **Docker**.
 
 > [!WARNING]
-> As of right now, Windows support is theoretically possible, but not has not been tested to work. Contributions and feedback on making it fully compatible for Windows and Windows Server are welcomed.
+> As of right now, Windows support is theoretically possible, but not has not been tested to work. Contributions and feedback on making it fully compatible for Windows and Windows Server are welcomed. WebAssembly and Android are currently not supported, but will be in the future.
 
 ## Submitting Contributions and Feedback
 While this project will change significantly, feedback, issues, and contributions are highly welcomed and encouraged. If you'd like to contribute to this project, please be sure to read both the [API Guidelines](https://github.com/ATProtoKit/ATIdentityTools/blob/main/API_GUIDELINES.md) as well as the [Contributor Guidelines](https://github.com/MasterJ93/ATProtoKit/blob/main/CONTRIBUTING.md) before submitting a pull request. Any issues (such as bug reports or feedback) can be submitted in the [Issues](https://github.com/ATProtoKit/ATIdentityTools/issues) tab. Finally, if there are any security vulnerabilities, please read [SECURITY.md](https://github.com/ATProtoKit/ATIdentityTools/blob/main/SECURITY.md) for how to report it.

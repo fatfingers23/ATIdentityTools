@@ -22,15 +22,15 @@ public struct IdentityResolver {
     /// Initializes an instance of `IDResolver`.
     ///
     /// - Parameters:
-    ///   - options: A list of options for resolving identities.
-    ///   - urlSession: The URL session instances used for requests.
-    public init(options: IdentityResolverOptions, urlSession: URLSession = .shared) {
+    ///   - options: A list of options for resolving identities. Optional. Defaults to `nil`.
+    ///   - urlSession: The URL session instances used for requests. Optional. Defaults to `.shared`.
+    public init(options: IdentityResolverOptions? = nil, urlSession: URLSession = .shared) {
         self.urlSession = urlSession
 
-        let timeout = options.timeout ?? 3_000
-        let plcURL = options.plcURL ?? URL(string: "https://plc.directory")
-        let didCache = options.didCache
-        let backupNameservers = options.backupNameservers
+        let timeout = options?.timeout ?? 3_000
+        let plcURL = options?.plcURL ?? URL(string: "https://plc.directory")
+        let didCache = options?.didCache
+        let backupNameservers = options?.backupNameservers
 
         let handleResolverOptions = HandleResolverOptions(timeout: timeout, backupNameservers: backupNameservers)
         let didResolverOptions = DIDResolverOptions(timeout: timeout, plcURL: plcURL, didCache: didCache)
@@ -38,6 +38,4 @@ public struct IdentityResolver {
         self.handle = HandleResolver(options: handleResolverOptions)
         self.did = DIDResolver(options: didResolverOptions, urlSession: urlSession)
     }
-
-
 }

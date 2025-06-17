@@ -90,7 +90,7 @@ public actor HandleResolver: Sendable {
     /// - Parameter handle: The andle to resolve.
     /// - Returns: The DID Document, or `nil` (if the fetching fails).
     ///
-    /// - Throws: `URLError`, if the URL is poorly constructed.
+    /// - Throws: An error if the URL is poorly constructed, or if the resolution fails.
     public func resolveHTTP(with handle: String) async throws -> String? {
         guard let host = URL(string: "https://\(handle)"),
               let wellKnownURL = URL(string: "/.well-known/atproto-did", relativeTo: host) else {
@@ -115,7 +115,7 @@ public actor HandleResolver: Sendable {
                 return nil
             }
         } catch {
-            return nil
+            throw error
         }
     }
 

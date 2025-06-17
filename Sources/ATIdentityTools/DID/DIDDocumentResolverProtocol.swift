@@ -57,7 +57,8 @@ public protocol DIDDocumentResolverProtocol {
     ///   - did: The decentralized identifier (DID) attached to the DID Document.
     ///   - willForceRefresh: Determines whether the method should bypass any cached values and
     ///   forcefully refresh.
-    /// - Returns:
+    /// - Returns: A `DIDDocument` object, containing the valid DID Document from the given
+    /// decentralized identifier (DID).
     mutating func resolve(did: String, willForceRefresh: Bool) async throws -> DIDDocument
 
     /// Resolves the AT Protocol–specific metadata from a DID Document.

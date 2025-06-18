@@ -32,12 +32,12 @@ public enum DIDUtilities {
 
             group.addTask {
                 try await Task.sleep(nanoseconds: milliseconds * 1_000_000)
-                throw CancellationError()
+                throw TimeoutError.timeout
             }
 
             guard let result = try await group.next() else {
                 group.cancelAll()
-                throw CancellationError()
+                throw TimeoutError.timeout
             }
 
             group.cancelAll()

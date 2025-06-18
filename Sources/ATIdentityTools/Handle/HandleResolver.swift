@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 @preconcurrency import AsyncDNSResolver
 
 /// An actor for resolving handles.

@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// A structure for resolving decentralized identifiers (DIDs).
 public struct DIDResolver: DIDDocumentResolverProtocol {

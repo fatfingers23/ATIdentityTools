@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// A concrete implementation for resolving `did:plc` DID documents.
 public struct DIDPLCResolver: DIDDocumentResolverProtocol, Sendable {

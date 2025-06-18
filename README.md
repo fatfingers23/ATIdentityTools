@@ -4,7 +4,7 @@
 
 <h1 align="center">ATIdentityTools</h1>
 
-<p align="center">Decentralized Identity (DID) utilities for the AT Protocol, written in Swift.</p>
+<p align="center">Decentralized Identity (DID) and handle utilities for the AT Protocol, written in Swift.</p>
 
 <div align="center">
 

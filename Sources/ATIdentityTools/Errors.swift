@@ -109,3 +109,41 @@ public enum DIDResolverError: Error, LocalizedError, CustomStringConvertible {
         return errorDescription ?? String(describing: self)
     }
 }
+
+/// Errors that can occur while resolving handles.
+public enum HandleResolverError: Error, LocalizedError, CustomStringConvertible {
+
+    /// The handle does not include a valid decentralized identifier (DID).
+    ///
+    /// - Parameter handle: The invalid handle.
+    case didNotFound(handle: String)
+
+    public var errorDescription: String? {
+        switch self {
+            case .didNotFound(let handle):
+                return "No DID found for handle: \(handle)"
+        }
+    }
+
+    public var description: String {
+        return errorDescription ?? String(describing: self)
+    }
+}
+
+/// Errors that can occur with respect to timeouts.
+public enum TimeoutError: Error, LocalizedError, CustomStringConvertible {
+
+    /// The request has timed out.
+    case timeout
+
+    public var errorDescription: String? {
+        switch self {
+            case .timeout:
+                return "The request has timed out."
+        }
+    }
+
+    public var description: String {
+        return errorDescription ?? String(describing: self)
+    }
+}

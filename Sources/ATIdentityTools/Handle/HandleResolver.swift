@@ -20,7 +20,7 @@ public actor HandleResolver: Sendable {
     /// The prefix indicating a DID record within a DNS TXT entry.
     public static let prefix: String = "did="
 
-    /// The amount of time allowed for the request to run before it times out.
+    /// The amount of time (in seconds) allowed for the request to run before it times out.
     public let timeout: Int
 
     /// An array of backup nameservers. Optional.
@@ -33,7 +33,7 @@ public actor HandleResolver: Sendable {
     ///
     /// - Parameter options: A list of options for resolving handles. Optional. Defaults to `nil`.
     public init(options: HandleResolverOptions? = nil) {
-        let timeout = options?.timeout ?? 3_000
+        let timeout = options?.timeout ?? 3
         let backupNameservers = options?.backupNameservers
 
         self.timeout = timeout
@@ -73,20 +73,18 @@ public actor HandleResolver: Sendable {
     /// - Parameter handle: The handle to resolve.
     /// - Returns: The DID Document, or `nil` (if it can't find a valid one).
     private func resolveDNS(with handle: String) async throws -> String? {
-        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
-            do {
-                var chunkedResults: [String] = []
-
+        do {
+            let chunkedResults = try await Task.detached(priority: .utility) { () throws -> [String] in
+                var options = CAresDNSResolver.Options.default
+                options.timeoutMillis = Int32(self.timeout * 1_000)
                 let resolver = try AsyncDNSResolver()
                 let txtResults = try await resolver.queryTXT(name: "\(Self.subdomain).\(handle)")
-                for txtResult in txtResults {
-                    chunkedResults.append(txtResult.txt)
-                }
+                return txtResults.map { $0.txt }
+            }.value
 
-                return await self.parseDNSResult(chuckedResult: chunkedResults)
-            } catch {
-                return nil
-            }
+            return await self.parseDNSResult(chuckedResult: chunkedResults)
+        } catch {
+            return nil
         }
     }
 
@@ -104,7 +102,7 @@ public actor HandleResolver: Sendable {
             }
 
             let config = URLSessionConfiguration.default
-            config.timeoutIntervalForRequest = 3.0
+            config.timeoutIntervalForRequest = TimeInterval(self.timeout)
             let session = URLSession(configuration: config)
 
             do {
@@ -135,13 +133,14 @@ public actor HandleResolver: Sendable {
             do {
                 var chunkedResults: [String] = []
 
-                let backupIPAddresses = await self.getBackupNameserverIPs()
+                let backupIPAddresses = try await self.getBackupNameserverIPs()
                 guard let backupIPAddresses = backupIPAddresses, backupIPAddresses.count > 0 else {
                     return nil
                 }
 
                 var options = CAresDNSResolver.Options.default
                 options.servers = backupIPAddresses
+                options.timeoutMillis = Int32(self.timeout * 1_000)
                 let resolver = try AsyncDNSResolver(options: options)
                 let txtResults = try await resolver.queryTXT(name: "\(Self.subdomain).\(handle)")
 
@@ -181,7 +180,9 @@ public actor HandleResolver: Sendable {
         }
 
         do {
-            let resolver = try AsyncDNSResolver()
+            var options = CAresDNSResolver.Options.default
+            options.timeoutMillis = Int32(self.timeout * 1_000)
+            let resolver = try AsyncDNSResolver(options: options)
             var ipAddressResults: [String] = []
 
             for ipAddress in backupNameservers {

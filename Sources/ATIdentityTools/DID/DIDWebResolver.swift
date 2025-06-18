@@ -13,7 +13,7 @@ import FoundationNetworking
 /// A concrete implementation for resolving `did:web` DID documents.
 public struct DIDWebResolver: DIDDocumentResolverProtocol, Sendable {
 
-    /// The time the request can take before it times out, in milliseconds.
+    /// The time the request can take before it times out, in seconds.
     public let timeout: Int
 
     /// A cache related to decentralized identifiers (DIDs). Optional.

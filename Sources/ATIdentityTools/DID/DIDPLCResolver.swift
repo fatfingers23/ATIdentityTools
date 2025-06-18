@@ -16,7 +16,7 @@ public struct DIDPLCResolver: DIDDocumentResolverProtocol, Sendable {
     /// The URL of the `did:plc`.
     public let plcURL: String
 
-    /// The time the request can take before it times out, in milliseconds.
+    /// The time the request can take before it times out, in seconds.
     public let timeout: Int
 
     /// A cache related to decentralized identifiers (DIDs). Optional.
@@ -32,7 +32,7 @@ public struct DIDPLCResolver: DIDDocumentResolverProtocol, Sendable {
     ///   - timeout: The time the request can take before it times out, in milliseconds. Defaults to `3000`.
     ///   - didCache: A cache related to decentralized identifiers (DIDs). Optional. Defaults to `nil`.
     ///   - urlSession: The URL session instances used for requests. Defaults to `.shared`.
-    public init(plcURL: String, timeout: Int = 3_000, didCache: DIDCache? = nil, urlSession: URLSession = .shared) {
+    public init(plcURL: String, timeout: Int = 3, didCache: DIDCache? = nil, urlSession: URLSession = .shared) {
         self.plcURL = plcURL
         self.timeout = timeout
         self.didCache = didCache

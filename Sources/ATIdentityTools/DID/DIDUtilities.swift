@@ -31,7 +31,12 @@ public enum DIDUtilities {
             }
 
             group.addTask {
-                try await Task.sleep(nanoseconds: milliseconds * 1_000_000)
+                let nanoseconds = milliseconds.multipliedReportingOverflow(by: 1_000_000)
+                guard !nanoseconds.overflow else {
+                    throw TimeoutError.timeout
+                }
+
+                try await Task.sleep(nanoseconds: nanoseconds.partialValue)
                 throw TimeoutError.timeout
             }
 

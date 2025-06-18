@@ -41,8 +41,6 @@ ATIdentityTools is fully open source under the [Apache 2.0 license](https://gith
 
 ### Resolvers
 
-- ``IdentityResolver``
-- ``IdentityResolverOptions``
 - ``HandleResolver``
 - ``HandleResolverOptions``
 - ``DIDResolver``

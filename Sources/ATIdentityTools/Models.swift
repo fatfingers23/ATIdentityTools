@@ -8,22 +8,6 @@
 import Foundation
 import ATCommonWeb
 
-/// A list of options as a result of resolving an identity.
-public struct IdentityResolverOptions {
-
-    /// The amount of seconds before the request times out. Optional.
-    public let timeout: Int?
-
-    /// The URL of the `did:plc`. Optional.
-    public let plcURL: URL?
-
-    /// A cache of the identity.
-    public let didCache: DIDCache
-
-    /// An array of backup nameservers for the identity. Optional.
-    public let backupNameservers: [String]?
-}
-
 /// A list of options as a result of resolving a handle.
 public struct HandleResolverOptions {
 

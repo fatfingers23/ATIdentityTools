@@ -45,7 +45,7 @@ public actor HandleResolver: Sendable {
         try await withThrowingTaskGroup(of: String?.self) { group in
             // Launch DNS.
             group.addTask { @Sendable in
-                await self.resolveDNS(with: handle)
+                try await self.resolveDNS(with: handle)
             }
 
             // Launch HTTP.
@@ -61,7 +61,7 @@ public actor HandleResolver: Sendable {
                 }
             }
             // If we get here, both tasks failed.
-            return await resolveDNSBackup(with: handle)
+            return try await resolveDNSBackup(with: handle)
         }
     }
 
@@ -69,19 +69,21 @@ public actor HandleResolver: Sendable {
     ///
     /// - Parameter handle: The handle to resolve.
     /// - Returns: The DID Document, or `nil` (if it can't find a valid one).
-    private func resolveDNS(with handle: String) async -> String? {
-        do {
-            var chunkedResults: [String] = []
+    private func resolveDNS(with handle: String) async throws -> String? {
+        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
+            do {
+                var chunkedResults: [String] = []
 
-            let resolver = try AsyncDNSResolver()
-            let txtResults = try await resolver.queryTXT(name: "\(Self.subdomain).\(handle)")
-            for txtResult in txtResults {
-                chunkedResults.append(txtResult.txt)
+                let resolver = try AsyncDNSResolver()
+                let txtResults = try await resolver.queryTXT(name: "\(Self.subdomain).\(handle)")
+                for txtResult in txtResults {
+                    chunkedResults.append(txtResult.txt)
+                }
+
+                return await self.parseDNSResult(chuckedResult: chunkedResults)
+            } catch {
+                return nil
             }
-
-            return await self.parseDNSResult(chuckedResult: chunkedResults)
-        } catch {
-            return nil
         }
     }
 
@@ -92,30 +94,32 @@ public actor HandleResolver: Sendable {
     ///
     /// - Throws: An error if the URL is poorly constructed, or if the resolution fails.
     public func resolveHTTP(with handle: String) async throws -> String? {
-        guard let host = URL(string: "https://\(handle)"),
-              let wellKnownURL = URL(string: "/.well-known/atproto-did", relativeTo: host) else {
-            throw URLError(.badURL)
-        }
-
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 3.0
-        let session = URLSession(configuration: config)
-
-        do {
-            let (data, _) = try await session.data(from: wellKnownURL)
-
-            // Convert data to text and get the first non-empty line.
-            if let text = String(data: data, encoding: .utf8),
-               let firstLine = text.split(separator: "\n", omittingEmptySubsequences: true).first?.trimmingCharacters(in: .whitespacesAndNewlines),
-               firstLine.hasPrefix("did:") {
-
-                // Return the DID string if valid.
-                return String(firstLine)
-            } else {
-                return nil
+        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
+            guard let host = URL(string: "https://\(handle)"),
+                  let wellKnownURL = URL(string: "/.well-known/atproto-did", relativeTo: host) else {
+                throw URLError(.badURL)
             }
-        } catch {
-            throw error
+
+            let config = URLSessionConfiguration.default
+            config.timeoutIntervalForRequest = 3.0
+            let session = URLSession(configuration: config)
+
+            do {
+                let (data, _) = try await session.data(from: wellKnownURL)
+
+                // Convert data to text and get the first non-empty line.
+                if let text = String(data: data, encoding: .utf8),
+                   let firstLine = text.split(separator: "\n", omittingEmptySubsequences: true).first?.trimmingCharacters(in: .whitespacesAndNewlines),
+                   firstLine.hasPrefix("did:") {
+
+                    // Return the DID string if valid.
+                    return String(firstLine)
+                } else {
+                    return nil
+                }
+            } catch {
+                throw error
+            }
         }
     }
 
@@ -123,27 +127,29 @@ public actor HandleResolver: Sendable {
     ///
     /// - Parameter handle: The handle to resolve.
     /// - Returns: A DID Document, or `nil` (if it can't find a valid one).
-    public func resolveDNSBackup(with handle: String) async -> String? {
-        do {
-            var chunkedResults: [String] = []
+    public func resolveDNSBackup(with handle: String) async throws -> String? {
+        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
+            do {
+                var chunkedResults: [String] = []
 
-            let backupIPAddresses = await getBackupNameserverIPs()
-            guard let backupIPAddresses = backupIPAddresses, backupIPAddresses.count > 0 else {
+                let backupIPAddresses = await self.getBackupNameserverIPs()
+                guard let backupIPAddresses = backupIPAddresses, backupIPAddresses.count > 0 else {
+                    return nil
+                }
+
+                var options = CAresDNSResolver.Options.default
+                options.servers = backupIPAddresses
+                let resolver = try AsyncDNSResolver(options: options)
+                let txtResults = try await resolver.queryTXT(name: "\(Self.subdomain).\(handle)")
+
+                for txtResult in txtResults {
+                    chunkedResults.append(txtResult.txt)
+                }
+
+                return await self.parseDNSResult(chuckedResult: chunkedResults)
+            } catch {
                 return nil
             }
-
-            var options = CAresDNSResolver.Options.default
-            options.servers = backupIPAddresses
-            let resolver = try AsyncDNSResolver(options: options)
-            let txtResults = try await resolver.queryTXT(name: "\(Self.subdomain).\(handle)")
-
-            for txtResult in txtResults {
-                chunkedResults.append(txtResult.txt)
-            }
-
-            return await self.parseDNSResult(chuckedResult: chunkedResults)
-        } catch {
-            return nil
         }
     }
 

@@ -40,7 +40,7 @@ body:
     attributes:
       label: Actual Results
       description: What actually happened?
-      placeholder: "No error is thrown, then 30 seconds later, the error \"\" appears."
+      placeholder: "No error is thrown, then 30 seconds later, the error \"The request has timed out.\" appears."
     validations:
       required: true
   - type: dropdown

@@ -33,6 +33,45 @@ This is a lightweight package that shouldn't take much in your project, but its 
 
 This package relates to identity resolution and validation. This, and _DIDCore_, are based on the [`identity`](https://github.com/bluesky-social/atproto/tree/main/packages/identity) and [`did`](https://github.com/bluesky-social/atproto/tree/main/packages/did) packages from the official [`atproto`](https://github.com/bluesky-social/atproto) TypeScript repository, respectively.
 
+## Quick Example
+```swift
+do {
+    // Create instances of the handle and DID resolvers.
+    let handleResolver = HandleResolver()
+    var didResolver = DIDResolver()
+
+    // Add the handle and resolve it.
+    let handle = "atproto.com"
+    let did = try await handleResolver.resolve(handle: handle)
+
+    if let did = did {
+        // Now you can view the DID...
+        print("Handle resolved to: \(did)") // did:plc:ewvi7nxzyoun6zhxrhs64oiz
+
+        // ... and resolve that to get the DID Document.
+        let didDocument = try await didResolver.resolve(did: did)
+        print("DID Document: \(didDocument)")
+
+        // Additional retries of the same DID will be cached for a period of time. You can disable this by force refreshing.
+        let secondDIDDocument = try await didResolver.resolve(did: did, willForceRefresh: true)
+        print("Second DID Document: \(secondDIDDocument)")
+
+        // Helper methods can also use the same cache.
+        let data = try await didResolver.resolveATProtocolData(for: did)
+        print("Resolved AT Protocol Data: \(data)")
+
+        if data.handle == handle {
+            print("Handle mismatch.")
+        }
+    } else {
+        print("No DID found for handle.")
+    }
+} catch {
+    print(error)
+}
+
+```
+
 ## Installation
 You can use the Swift Package Manager to download and import the library into your project:
 ```swift

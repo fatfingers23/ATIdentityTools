@@ -133,7 +133,7 @@ public actor HandleResolver: Sendable {
             do {
                 var chunkedResults: [String] = []
 
-                let backupIPAddresses = try await self.getBackupNameserverIPs()
+                let backupIPAddresses = await self.getBackupNameserverIPs()
                 guard let backupIPAddresses = backupIPAddresses, backupIPAddresses.count > 0 else {
                     return nil
                 }

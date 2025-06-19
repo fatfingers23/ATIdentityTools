@@ -8,9 +8,13 @@
 
 <div align="center">
 
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FATProtoKit%2FATCryptography%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/ATProtoKit/ATCryptography)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FATProtoKit%2FATCryptography%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/ATProtoKit/ATCryptography)
-[![GitHub Repo stars](https://img.shields.io/github/stars/atprotokit/atidentitytools?style=flat&logo=github)](https://github.com/ATProtoKit/ATIdentityTools)
+<!--[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FATProtoKit%2FATCryptography%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/ATProtoKit/ATCryptography)-->
+<!--[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FATProtoKit%2FATCryptography%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/ATProtoKit/ATCryptography)-->
+
+</div>
+<div align="center">
+
+[![GitHub Repo stars](https://img.shields.io/github/stars/ATProtoKit/ATIdentityTools?style=flat&logo=github)](https://github.com/ATProtoKit/ATIdentityTools)
 
 </div>
 <div align="center">

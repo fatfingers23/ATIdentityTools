@@ -5,11 +5,12 @@
 //  Created by Christopher Jr Riley on 2025-05-22.
 //
 
-import Foundation
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
 @preconcurrency import AsyncDNSResolver
+import Foundation
+
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
 
 /// An actor for resolving handles.
 public actor HandleResolver: Sendable {
@@ -33,7 +34,7 @@ public actor HandleResolver: Sendable {
     ///
     /// - Parameter options: A list of options for resolving handles. Optional. Defaults to `nil`.
     public init(options: HandleResolverOptions? = nil) {
-        let timeout = options?.timeout ?? 3
+        let timeout = options?.timeout ?? 12000
         let backupNameservers = options?.backupNameservers
 
         self.timeout = timeout
@@ -59,7 +60,7 @@ public actor HandleResolver: Sendable {
             // Return as soon as one task gives a non-nil result.
             for try await result in group {
                 if let found = result {
-                    group.cancelAll() // Cancels any unfinished tasks.
+                    group.cancelAll()  // Cancels any unfinished tasks.
                     return found
                 }
             }
@@ -74,7 +75,8 @@ public actor HandleResolver: Sendable {
     /// - Returns: The DID Document, or `nil` (if it can't find a valid one).
     private func resolveDNS(with handle: String) async throws -> String? {
         do {
-            let chunkedResults = try await Task.detached(priority: .utility) { () throws -> [String] in
+            let chunkedResults = try await Task.detached(priority: .utility) {
+                () throws -> [String] in
                 var options = CAresDNSResolver.Options.default
                 options.timeoutMillis = Int32(self.timeout * 1_000)
                 let resolver = try AsyncDNSResolver()
@@ -97,7 +99,8 @@ public actor HandleResolver: Sendable {
     public func resolveHTTP(with handle: String) async throws -> String? {
         try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
             guard let host = URL(string: "https://\(handle)"),
-                  let wellKnownURL = URL(string: "/.well-known/atproto-did", relativeTo: host) else {
+                let wellKnownURL = URL(string: "/.well-known/atproto-did", relativeTo: host)
+            else {
                 throw URLError(.badURL)
             }
 
@@ -110,8 +113,10 @@ public actor HandleResolver: Sendable {
 
                 // Convert data to text and get the first non-empty line.
                 if let text = String(data: data, encoding: .utf8),
-                   let firstLine = text.split(separator: "\n", omittingEmptySubsequences: true).first?.trimmingCharacters(in: .whitespacesAndNewlines),
-                   firstLine.hasPrefix("did:") {
+                    let firstLine = text.split(separator: "\n", omittingEmptySubsequences: true)
+                        .first?.trimmingCharacters(in: .whitespacesAndNewlines),
+                    firstLine.hasPrefix("did:")
+                {
 
                     // Return the DID string if valid.
                     return String(firstLine)

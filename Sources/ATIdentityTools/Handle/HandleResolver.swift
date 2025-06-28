@@ -34,7 +34,7 @@ public actor HandleResolver: Sendable {
     ///
     /// - Parameter options: A list of options for resolving handles. Optional. Defaults to `nil`.
     public init(options: HandleResolverOptions? = nil) {
-        let timeout = options?.timeout ?? 12000
+        let timeout = options?.timeout ?? 10
         let backupNameservers = options?.backupNameservers
 
         self.timeout = timeout
@@ -97,7 +97,7 @@ public actor HandleResolver: Sendable {
     ///
     /// - Throws: An error if the URL is poorly constructed, or if the resolution fails.
     public func resolveHTTP(with handle: String) async throws -> String? {
-        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
+        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout * 1_000)) {
             guard let host = URL(string: "https://\(handle)"),
                 let wellKnownURL = URL(string: "/.well-known/atproto-did", relativeTo: host)
             else {
@@ -134,7 +134,7 @@ public actor HandleResolver: Sendable {
     /// - Parameter handle: The handle to resolve.
     /// - Returns: A DID Document, or `nil` (if it can't find a valid one).
     public func resolveDNSBackup(with handle: String) async throws -> String? {
-        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
+        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout) * 1_000) {
             do {
                 var chunkedResults: [String] = []
 

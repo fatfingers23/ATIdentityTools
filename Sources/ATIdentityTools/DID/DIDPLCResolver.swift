@@ -40,7 +40,7 @@ public struct DIDPLCResolver: DIDDocumentResolverProtocol, Sendable {
     }
 
     public func resolveRawDIDDocument(did: String) async throws -> String {
-        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
+        try await DIDUtilities.timed(milliseconds: UInt64(self.timeout * 1_000)) {
             guard let plcHost = URL(string: plcURL), let url = URL(string: did.encodedForURIComponent, relativeTo: plcHost) else {
                 throw URLError(.badURL)
             }

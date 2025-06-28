@@ -65,7 +65,7 @@ public struct DIDWebResolver: DIDDocumentResolverProtocol, Sendable {
             throw URLError(.badURL)
         }
 
-        return try await DIDUtilities.timed(milliseconds: UInt64(self.timeout)) {
+        return try await DIDUtilities.timed(milliseconds: UInt64(self.timeout) * 1_000) {
             var request = URLRequest(url: finalURL)
 
             request.setValue("application/did+ld+json,application/json", forHTTPHeaderField: "Accept")

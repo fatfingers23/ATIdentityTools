@@ -33,7 +33,7 @@ public struct DIDResolver: DIDDocumentResolverProtocol {
         self.urlSession = urlSession
 
         let plcURL = options?.plcURL?.absoluteString ?? "https://plc.directory"
-        let timeout = options?.timeout ?? 10
+        let timeout = options?.timeout ?? 5
 
         self.methods = [
             "plc": DIDPLCResolver(

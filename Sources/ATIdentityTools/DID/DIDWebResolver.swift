@@ -45,9 +45,9 @@ public struct DIDWebResolver: DIDDocumentResolverProtocol, Sendable {
 
         let urlPath: String
 
-        guard decodedParts.count > 1 else {
-            throw ATIdentityToolsError.poorlyFormattedDID(did: did)
-        }
+//        guard decodedParts.count > 1 else {
+//            throw ATIdentityToolsError.poorlyFormattedDID(did: did)
+//        }
 
         guard decodedParts.count == 1 else {
             throw ATIdentityToolsError.unsupportedDIDWebPath(did: did)
